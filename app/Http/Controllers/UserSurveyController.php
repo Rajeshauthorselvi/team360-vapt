@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\User;
 use Arr;
 use Illuminate\Routing\Redirector;
+use Http;
 class UserSurveyController extends Controller
 {
     /**
@@ -101,11 +102,31 @@ class UserSurveyController extends Controller
          'email'=>'required|email',
          'password'=>'required'
         ];
-
-        $validation=Validator::make($request->all(),$rules);
+        if (env('APP_ENV')=="production"){
+            $rules['g-recaptcha-response'] = 'required';
+            $messages = [
+                'g-recaptcha-response.required' => 'Please verify the captcha.',
+            ];
+        }
+        $validation=Validator::make($request->all(),$rules,$messages);
 
         if($validation->passes())
         {
+            if (env('APP_ENV')=="production"){
+
+                // Verify reCAPTCHA
+                $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret' => config('services.recaptcha.secret_key'),
+                    'response' => $request->input('g-recaptcha-response'),
+                    'remoteip' => $request->ip(),
+                ]);
+                $recaptcha = $response->json();
+                if (!($recaptcha['success'] ?? false)) {
+                    return back()->withErrors(['captcha' => 'Captcha verification failed. Please try again.']);
+                }
+            }
+
+
             $input=$request->all();
             Arr::forget($input,['_token','survey_url']);
 

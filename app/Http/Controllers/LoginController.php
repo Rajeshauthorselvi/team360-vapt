@@ -15,6 +15,7 @@ use Session;
 use Validator;
 use Arr;
 use Str;
+use Http;
 class LoginController extends Controller
 {
     public function index(Request $request)

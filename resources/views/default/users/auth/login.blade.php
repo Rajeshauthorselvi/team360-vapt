@@ -11,7 +11,7 @@
             <div class="panel panel-info  login-box">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        Login   
+                        Login
                     </h3>
                 </div>
                 <div class="panel-body">
@@ -24,7 +24,7 @@
                         @endforeach
                        </div>
                       @endif
-                      
+
                         <div class="form-group">
                             <div class="input-group">
                                 {!! Form::email('email',null,['class'=>'form-control','id'=>'email','placeholder'=>'Email','autocomplete'=>'off']) !!}
@@ -35,9 +35,14 @@
                                 {!! Form::password('password',['class'=>'form-control','id'=>'password','placeholder'=>'Password','autocomplete'=>'off']) !!}
                             </div>
                         </div>
+                        @if (env('APP_ENV')=="production")
+                            <!-- Google reCAPTCHA -->
+                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                            <br>
+                        @endif
                         <div class="form-group">
                             <div class="input-group">
-                                
+
                                 <button class="btn icon-btn-save btn-submit" type="submit">
                                 <span class="btn-save-label"></span>Login</button>
                                 <a class="pull-right" href="#" data-target="#pwdModal" data-toggle="modal">Forgot my password ?</a>
@@ -52,6 +57,9 @@
     </div>
 </div>
 </div>
+    <!-- Add reCAPTCHA script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <script type="text/javascript">
 $(document).ready(function(){
     $('#user-login').bootstrapValidator({
