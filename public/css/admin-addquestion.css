@@ -1,0 +1,200 @@
+ul.column {
+    float: left;
+    width: 100%;
+    padding: 0px;
+    list-style: none;
+}
+.question-drop-drag ul{list-style: none; float: left;width: 100%;}
+.field-type.intro {
+    background: #cce6c5 none repeat scroll 0 0;
+    border-radius: 2px;
+    color: #557058;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.field-type.fields {
+    background: #f1f1f1 none repeat scroll 0 0;
+    border: 1px solid #d8d8d8;
+    box-shadow: none;
+    color: #555555;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px 2px;
+    text-shadow: none;
+    margin-bottom:10px;
+    cursor: pointer; 
+    float: left;
+    margin-right: 1%;
+    width: 49%;
+    border-radius: 2px;
+}
+li.field-type.fields:nth-child(5) {
+    clear: both;
+}
+.field-type.outro
+{
+  background: #dbeced none repeat scroll 0 0;
+    border: medium none !important;
+    box-shadow: none;
+    color: #5e7374;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px;
+    text-shadow: none;
+    cursor: pointer;
+     border-radius: 2px;
+}
+.field-type.intro:hover{background: #D9ECD3 none repeat scroll 0 0;  }
+.field-type.fields:hover{background: #FBFBFB none repeat scroll 0 0; }
+.field-type.outro:hover{background: #E9F3F4 none repeat scroll 0 0;  }
+.question-drop-drag ul{padding: 0;}
+
+.page-break {
+    background: #D8DAA5 none repeat scroll 0 0;
+    padding:3px;
+    border-radius: 5px;
+    border:1px dashed #999;
+    margin-bottom:10px; 
+    color: #65655d;
+    opacity: 0.8;
+    clear: both;
+}
+
+.drop-space-intro {
+    background: #e4f2df none repeat scroll 0 0;
+    border: 1px dashed #999999;
+    border-radius: 3px;
+    clear: both;
+    margin-bottom: 6px;
+    opacity: 0.9;
+    position: relative;
+    color: #899186;
+    padding: 30px;
+  }
+
+.drop-space-questions{
+   background: #eeeeee none repeat scroll 0 0;
+    border: 1px dashed #999999;
+    border-radius: 3px;
+    clear: both;
+    margin-bottom: 25px;
+    opacity: 0.9;
+    position: relative;
+    color: color: #aeaeae;
+    padding: 15px;
+}
+
+.drop-space-outro {
+    background: #dff1f2 none repeat scroll 0 0;
+    border: 1px dashed #999999;
+    border-radius: 3px;
+    clear: both;
+    margin-bottom: 6px;
+    opacity: 0.9;
+    position: relative;
+    color: #869191;
+    padding: 30px;
+  }
+
+.ui-draggable{list-style: none;}
+
+
+.glyphicon.glyphicon-trash{color: #000;}
+.response-area.intro,.response-area.outro {
+    background-color: #e5efe5;
+    border: 1px solid #d8d8d8;
+    float: left;
+    width: 100%;
+    margin-bottom: 5px;
+
+}
+.response-area.fields .response-label {
+  background: #ffffff none repeat scroll 0 0;
+  border: 1px solid;
+  border-radius: 3px;
+  margin-left: 1%;
+  width: 94%;
+  margin-bottom:10px;
+}
+
+
+.question-display-order {
+  background: #ffffff none repeat scroll 0 0;
+  border: 1px solid;
+  border-radius: 3px;
+  float: left;
+  padding: 10px 0;
+  width: 5%;
+}
+.response-label,.response-label-db
+{
+    color:#39434f;
+    float: left;
+    font-size: 14px;
+    padding: 10px;
+    text-align: left;
+    width: 95%;
+    cursor: pointer;
+}
+
+.form-group.question-text-form-group {
+    margin: auto;
+}
+#show-error-box {
+    margin: auto;
+    max-width: 80%;
+    padding: 15px 0 0;
+}
+.alert.alert-danger.alert-dismissable {
+    margin-bottom: auto;
+}
+.load-image{display: none;}
+
+
+.delete-question{display:none;padding: 10px;}
+
+.response-area.fields .delete-question{
+
+ position: absolute;
+  right: 20px;
+    
+
+}
+.response-area.fields{clear:both;}
+.response-area-db.questiontxt-db,.question-dimension {
+    float: left;
+    margin-bottom: 10px;
+    width: 100%;
+    background: #f9f9f9 none repeat scroll 0 0;
+    border: 1px solid #dddddd;
+}
+.question-dimension{
+    background: #C3E4F3 none repeat scroll 0 0;
+    border-color:#C3E4F3;
+   
+
+}
+.question-dimension .response-label-db {  color: #fff; font-weight: bold; font-size: 16px;}
+.response-order-list {
+    background: #ffffff none repeat scroll 0 0;
+    border-right: 1px solid #dddddd;
+    color: #000000;
+    float: left;
+    padding: 10px;
+    width: 10%;
+    cursor: pointer;
+}
+.response-area-db.questiontxt-db .response-label-db {
+    width: 70%;
+}
+.question-dimension-section {
+    float: right;
+    padding: 10px;
+    text-align: right;
+    width: 20%;
+}
+#welcome_txt > img {
+    padding: 6px 0;
+}
+</style>

@@ -1,0 +1,90 @@
+table.survey-table {
+    float: left;
+    margin-top: 20px;
+    width: 100%;
+}
+.form-group.changefile{display: none;}
+
+/*ul.question-objects {
+    list-style: outside none none;
+   padding: 0;
+}*/
+.welcome-strip.text-center {
+    background: #e6e7e8 none repeat scroll 0 0;
+    margin: 15px 0 30px;
+    padding: 10px;
+font-size:17px;
+}
+  .tab-content{margin-top: 20px;}
+  .form-control.demographic-data.first-child{width: 100%;}
+  .form-control.demographic-data {
+    float: left;
+    width: 93%;
+}
+.addButton.btn.btn-primary,.removeButton.btn.btn-danger{float: right;}
+.col-md-6.col-xs-6.col-sm-6.link {
+    position: relative;
+    top: 30px;
+}
+.survey-table th {
+    background: #2041bd none repeat scroll 0 0;
+    color: #ffffff;
+}
+.themes {
+    border: 1px solid #dddddd;
+    margin: auto;
+    padding: 20px 10px 10px;
+    text-align: center;
+    width: 50%;
+    
+}
+.themes.active{background: #46B24B none repeat scroll 0 0; color:#fff; }
+.survey-table .btn.btn-info {
+    float: left;
+    margin-right: 4px;
+}
+.width50{width: 50%; float: left;}
+.well {background:#fff;}
+
+.form-steps-wizard {
+    background-size: 100% auto;
+    height: 55px;
+    left: -1px;
+    position: absolute;
+    top: 80px;
+    width: 1172px;
+    z-index: 9;
+}
+.form-steps-wizard.step1{
+background-position: 0 0;
+}
+.form-steps-wizard {
+    background-image: url("../images/form-steps-img.png");
+}
+.form-wrapper{float: left;width: 100%;}
+h3.need-margin-bottom-forstrip {
+    margin-bottom: 100px;
+}
+footer {
+    background: #dddddd none repeat scroll 0 0;
+    margin-top: 15px;
+}
+.form-steps-wizard.step2{
+   background-position: 0 -65px
+}
+
+.form-steps-wizard.step3{
+   background-position: 0 252px
+}
+.form-steps-wizard.step4{
+  background-position:0 186px
+}
+.form-steps-wizard.step5{
+  background-position: 0 120px
+}
+.form-steps-wizard.step6 {
+  background-position: 0 55px;
+}
+.form-wrapper .col-sm-4 {
+    margin-bottom: 15px;
+}
