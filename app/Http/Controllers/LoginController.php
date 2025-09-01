@@ -44,10 +44,19 @@ class LoginController extends Controller
     public function post_login(Request $request)
     {
 
+
         $rules = [
             'email' => 'required|email',
             'password' => 'required',
+
         ];
+        if (env('APP_ENV')=="production"){
+            $rules['g-recaptcha-response'] = 'required';
+            $messages = [
+                'g-recaptcha-response.required' => 'Please verify the captcha.',
+            ];
+        }
+
 
         $survey_url = $request->get('survey_url');
         if (!empty($survey_url)) {
@@ -58,9 +67,29 @@ class LoginController extends Controller
             }
         }
 
-        $validation = Validator::make($request->all(), $rules);
+        $validation = Validator::make($request->all(), $rules,$messages);
 
         if ($validation->passes()) {
+
+            if (env('APP_ENV')=="production"){
+
+                // Verify reCAPTCHA
+                $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret' => config('services.recaptcha.secret_key'),
+                    'response' => $request->input('g-recaptcha-response'),
+                    'remoteip' => $request->ip(),
+                ]);
+
+                $recaptcha = $response->json();
+
+                if (!($recaptcha['success'] ?? false)) {
+                    return back()->withErrors(['captcha' => 'Captcha verification failed. Please try again.']);
+                }
+            }
+
+
+
+
             $input = $request->all();
             Arr::forget($input, ['_token', 'survey_url']);
             $user = User::where('email', $input['email'])->first();
