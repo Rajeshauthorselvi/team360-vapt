@@ -87,6 +87,7 @@ $footer_text=DB::table('surverys')->where('id',$survey_id)->value('footer_text')
                             {{ Session::get('success')}}
                         </div>
                         @endif
+
                         {!! Form::open(['route' =>'login','Method'=>'POST','class'=>'form-horizontal','id'=>'form','name'=>'form']) !!}
                         @if ($errors->any())
                         <div class='alert alert-danger'>
@@ -153,6 +154,15 @@ $footer_text=DB::table('surverys')->where('id',$survey_id)->value('footer_text')
                             <div class="panel-body">
 
                                 <p>If you have forgotten your password you can reset it here.</p>
+                                @if ($errors->any())
+                                <div class='alert alert-danger'>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    @foreach ( $errors->all() as $error )
+                                        <p>{{ $error }}</p>
+                                    @endforeach
+                                </div>
+                                @endif
 
                                 @if(Session::has('error'))
                                 <div class="alert alert-danger fade in">
@@ -172,6 +182,11 @@ $footer_text=DB::table('surverys')->where('id',$survey_id)->value('footer_text')
                                     </div>
 
 
+                                    @if (env('APP_ENV')=="production")
+                                        <!-- Google reCAPTCHA -->
+                                        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                                    @endif
+                                    <br>
                                     <div class="form-group">
                                         <input class="btn btn-lg btn-primary btn-block" value="Send My Password"
                                             type="submit">
@@ -199,7 +214,13 @@ $footer_text=DB::table('surverys')->where('id',$survey_id)->value('footer_text')
 
     <!-- Add reCAPTCHA script -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
+    @if (Session::has('from') && Session::get('from')=="reset")
+        <script type="text/javascript">
+            $(window).load(function(){
+                $('#pwdModal').modal('show');
+            });
+        </script>
+    @endif
     <script type="text/javascript">
         $(document).ready(function(){
 

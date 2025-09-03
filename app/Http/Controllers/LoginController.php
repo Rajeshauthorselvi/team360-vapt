@@ -121,6 +121,34 @@ class LoginController extends Controller
 
     public function ResetPasswordindex(Request $request)
     {
+
+        if (env('APP_ENV')=="production"){
+            $rules['g-recaptcha-response'] = 'required';
+            $messages = [
+                'g-recaptcha-response.required' => 'Please verify the captcha.',
+            ];
+
+            $validation = Validator::make($request->all(), $rules,$messages);
+            if ($validation->passes()) {
+                  // Verify reCAPTCHA
+                  $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret' => config('services.recaptcha.secret_key'),
+                    'response' => $request->input('g-recaptcha-response'),
+                    'remoteip' => $request->ip(),
+                ]);
+
+                $recaptcha = $response->json();
+
+                if (!($recaptcha['success'] ?? false)) {
+                    return back()->withErrors(['captcha' => 'Captcha verification failed. Please try again.']);
+                }
+            } else {
+                return Redirect::back()->withInput()->withErrors($validation)->with('from', 'reset');
+
+            }
+        }
+
+
         $input = $request->all();
         $data = $input['resetemail'];
         $userinfo = DB::table('users')

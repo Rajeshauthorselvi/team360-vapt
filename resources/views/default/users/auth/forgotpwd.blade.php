@@ -24,15 +24,27 @@
                               {{ Session::get('success')}}
                             </div>
                             @endif
-
+                            @if ($errors->any())
+                            <div class='alert alert-danger'>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                @foreach ( $errors->all() as $error )
+                                    <p>{{ $error }}</p>
+                                @endforeach
+                            </div>
+                            @endif
                             <div class="panel-body">
                               {!! Form::open(['route' => 'reset_pass_index','Method'=>'POST','class'=>'form-horizontal','id'=>'reset-pass','name'=>'form']) !!}
                                     <div class="form-group">
                                         {{Form::email('resetemail',null,['class'=>'form-control input-lg','id'=>'','placeholder'=>'Email Address'])}}
                                     </div>
-                              <div class="form-group">
-                                <input class="btn btn-lg btn-primary btn-block" value="Send My Password" type="submit">
-                              </div>
+                                    @if (env('APP_ENV')=="production")
+                                        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                                        <br>
+                                    @endif
+                                    <div class="form-group">
+                                        <input class="btn btn-lg btn-primary btn-block" value="Send My Password" type="submit">
+                                    </div>
                               {!! Form::close() !!}
                             </div>
 
@@ -41,7 +53,7 @@
             </div>
       </div>
       <div class="modal-footer">
- 
+
       </div>
   </div>
   </div>
