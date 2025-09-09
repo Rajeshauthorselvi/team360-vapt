@@ -7,8 +7,9 @@
 <div class="container bootstrap snippet">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
-              {!! Form::open(['route' =>['change-password',config('site.survey_slug')],'Method'=>'POST','class'=>'form-horizontal','id'=>'change-password']) !!}
-              {{Form::hidden('_method','PATCH')}}
+            <form method="POST" action="{{ route('change-password', config('site.survey_slug')) }}" class="form-horizontal" id="change-password">
+                @csrf
+                <input type="hidden" name="_method" value="PATCH">
             <div class="panel panel-info  login-box">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -19,12 +20,14 @@
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <div class="input-group">
-                                {{Form::password('password',['class'=>'form-control','id'=>'password','placeholder'=>'New password','autocomplete'=>'off'])}}
+                                <input type="password" name="password" class="form-control" id="password" placeholder="New password" autocomplete="off">
+
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                                {{Form::password('confirm_password',['class'=>'form-control','id'=>'password','placeholder'=>'Confirm Password','autocomplete'=>'off'])}}
+                                <input type="password" name="confirm_password" class="form-control" id="password" placeholder="Confirm Password" autocomplete="off">
+
                             </div>
                         </div>
                         <div class="form-group">
@@ -39,7 +42,7 @@
                     </div>
                 </div>
             </div>
-            {!! Form::close() !!}
+            </form>
         </div>
     </div>
 </div>

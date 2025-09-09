@@ -13,13 +13,14 @@
 @endif
 <div class="col-sm-12  col-md-12 col-xs-12 welcome-txt" id="question-container">
 
-  {!! Form::open(array('route'=>['user.store',config('site.survey_slug')],'method'=>'POST','id'=>'survey-user-form')) !!}
+    <form action="{{ route('user.store', config('site.survey_slug')) }}" method="POST" id="survey-user-form">
+        @csrf
 
   <div class="bs-example" data-example-id="contextual-panels">
 
       <ul class="question-container">
     @if(count($questions)>0)
-   
+
       @foreach($questions as $dimension=>$question)
        <?php $count=1 ?>
       <?php $iteration_count=$loop->iteration; ?>
@@ -28,15 +29,15 @@
      @else
         <?php $class_dimension="active-parent"; ?>
      @endif
-        
+
           <div class="dimension_count {{ $class_dimension }}" dimension-count="{{ $iteration_count }}">
                 @if($dimension_hide==0)
                       <div class="question-page head">
                         {!!$dimension!!}
                       </div>
-                      
-                @endif  
-              <?php $dimensionCount = 1?>  
+
+                @endif
+              <?php $dimensionCount = 1?>
               @foreach ($question as $key=>$ques)
 
                   @if(($dimensionCount ==1) && ($ques->question_sub_dimension!=''))
@@ -67,10 +68,11 @@
       </ul>
   </div>
 
-  {{Form::hidden('currentli',1,['id'=>'currentli'])}}
-  {{Form::hidden('formaction','submit',['id'=>'formaction'])}}
-  <input type="hidden" name="user_survey_respondent_id" value="{{$user_survey_id}}">
-  {{Form::close()}}
+  <input type="hidden" name="currentli" id="currentli" value="1">
+  <input type="hidden" name="formaction" id="formaction" value="submit">
+  <input type="hidden" name="user_survey_respondent_id" value="{{ $user_survey_id }}">
+  </form>
+
 
 </div>
 
@@ -89,7 +91,7 @@
 </style>
 
 <script type="text/javascript">
-  
+
 $(document).ready(function(){
 
 var error=0;
@@ -137,7 +139,7 @@ else
   $(this).find('.message').hide();
   }
 }
-  }); 
+  });
 
 
  if(liposition.length > 0)
@@ -153,11 +155,11 @@ else
 @endif
 
 <script type="text/javascript">
-  
+
 $("input[type=radio]").change(function(){ //code to check whether the sum of selected option is 6 for TVRLS application, code by Raj
 
   //alert( $("input[type=radio][name="+ this.name + "]").id );
-    
+
   if($(this).attr('class') == "grid-required op_radio checkSum6")
   {
       var totalSumSelectOpt = 0;
@@ -182,7 +184,7 @@ $("input[type=radio]").change(function(){ //code to check whether the sum of sel
               var questionsSelectedArray = srdBtnId.split('_');
               totalRdbSel++;
               totalSumSelectOpt = totalSumSelectOpt + (questionsSelectedArray[2] -1);
-              if(totalSumSelectOpt>6) 
+              if(totalSumSelectOpt>6)
               {
                   alert("Please fill the survey correctly. The sum of all three sub-questions (a), (b) and (c) should not exceed 6 in question ");
                   //$(this).attr('id').checked = false;
@@ -195,7 +197,7 @@ $("input[type=radio]").change(function(){ //code to check whether the sum of sel
                       $(this).attr('checked', false);
               }
 
-              
+
 
               //alert(totalSumSelectOpt+'_'+(questionsSelectedArray[2] -1))
 
@@ -203,7 +205,7 @@ $("input[type=radio]").change(function(){ //code to check whether the sum of sel
 
         }
       }
-      
+
       //alert(selectedValArray[2]);
  }
    //alert( $(this).attr('id')+'_'+ $(this).attr('class'));
