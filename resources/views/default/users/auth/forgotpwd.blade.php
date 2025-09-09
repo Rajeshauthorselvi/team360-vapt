@@ -34,9 +34,11 @@
                             </div>
                             @endif
                             <div class="panel-body">
-                              {!! Form::open(['route' => 'reset_pass_index','Method'=>'POST','class'=>'form-horizontal','id'=>'reset-pass','name'=>'form']) !!}
+                            <form method="POST" action="{{ route('reset_pass_index') }}" class="form-horizontal" id="reset-pass" name="form">
+                              @csrf
                                     <div class="form-group">
-                                        {{Form::email('resetemail',null,['class'=>'form-control input-lg','id'=>'','placeholder'=>'Email Address'])}}
+                                        <input type="email" name="resetemail" class="form-control input-lg" placeholder="Email Address">
+
                                     </div>
                                     @if (env('APP_ENV')=="production")
                                         <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
@@ -45,7 +47,7 @@
                                     <div class="form-group">
                                         <input class="btn btn-lg btn-primary btn-block" value="Send My Password" type="submit">
                                     </div>
-                              {!! Form::close() !!}
+                            </form>
                             </div>
 
                     </div>

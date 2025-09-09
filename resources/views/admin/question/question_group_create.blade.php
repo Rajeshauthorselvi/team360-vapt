@@ -11,9 +11,6 @@
                     <div class="form-steps-wizard step3"> </div>
 
 
-
-
-
                     <div class="col-md-12 well">
 
                         <h3 class="need-margin-bottom-forstrip text-center">Questions Grouping</h3>
@@ -46,7 +43,8 @@
                                 $s_no = 1;
                                 ?>
                                 <?php $action = 'questions_post_group'; ?>
-                                {!! Form::open(['route' => [$action, 'survey_id=' . $survey_id], 'method' => 'POST', 'id' => 'add-participants', 'class' => 'form-horizontal']) !!}
+                                <form action="{{ route($action, ['survey_id' => $survey_id]) }}" method="POST" id="add-participants" class="form-horizontal">
+                                @csrf
                                 <table class="table table-bordered survey-table">
                                     <thead class="quesiton_group_heading">
                                         <th width="1%">Q.No</th>
@@ -144,7 +142,7 @@
                                         class="btn btn-danger">Cancel</a>
                                     <input type="submit" class="btn btn-success" value="Save" id="submit">
                                 </div>
-                                {!! Form::close() !!}
+                                </form>
                             </div>
 
                         </div>

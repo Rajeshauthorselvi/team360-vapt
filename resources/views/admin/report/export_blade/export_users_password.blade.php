@@ -90,10 +90,21 @@
                             ?>
                         </td>
                         <td>
-                            @if (strlen($user_details->password) == 60 && preg_match('/^\$2y\$/', $user_details->password))
+                            @if (isset($user_details->password))
+
+                                <?php
+                                    try {
+                                        $password = decrypt($user_details->password);
+                                    } catch (Exception $e) {
+                                        $password ="";
+                                    }
+                                ?>
+
+                                {{ $password }}
                             @else
-                                {{ decrypt($user_details->password) }}
+                                -
                             @endif
+
                         </td>
                     @endif
 

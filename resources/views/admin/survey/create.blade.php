@@ -1,24 +1,11 @@
 @extends('layouts.default')
 
 @section('content')
-    <!--
-     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tagmanager/3.0.2/tagmanager.min.css">
-
-     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tagmanager/3.0.2/tagmanager.min.js"></script>
-
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-
-    -->
 
     <!-- <form class="container"> -->
 
-    {{ Form::open(['route' => 'survey.store','role' => 'form','class' => 'form-horizontal container','files' => 'true','id' => 'add-survey']) }}
+    <form action="{{ route('survey.store') }}" method="POST" role="form" class="form-horizontal container" enctype="multipart/form-data" id="add-survey">
+            @csrf
     <div class="row setup-content" id="step-1">
 
         <div class="col-xs-12">
@@ -49,56 +36,51 @@
                             <div class="col-md-8 col-md-offset-2 column">
 
                                 <div class="form-group">
-
-                                    {{ Form::label('title', 'Survey Name', ['class' => 'col-sm-2 ']) }}
+                                    <label for="title" class="col-sm-2">Survey Name</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('title', null, ['class' => 'form-control']) }}
+                                        <input type="text" name="title" id="title" class="form-control" oninput="sanitizeInput(this)">
                                     </div>
-
-                                </div>
-
-                                <div class="form-group">
-
-                                    {{ Form::label('cname', 'Client Name', ['class' => 'col-sm-2']) }}
-                                    <div class="col-sm-10">
-                                        {{ Form::text('client_name', null, ['class' => 'form-control','data-toggle' => 'tooltip','data-placement' => 'bottom','title' => 'Client Name']) }}
-                                    </div>
-
                                 </div>
 
 
                                 <div class="form-group">
-
-                                    {{ Form::label('sdate', 'Start Date', ['class' => 'col-sm-2 ']) }}
+                                    <label for="cname" class="col-sm-2">Client Name</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('start_date', null, ['class' => 'form-control', 'id' => 'startdatetime', 'readonly' => true]) }}
+                                        <input type="text" name="client_name" id="cname" class="form-control"
+                                               data-toggle="tooltip" data-placement="bottom" title="Client Name"
+                                               oninput="sanitizeInput(this)">
                                     </div>
-
                                 </div>
 
                                 <div class="form-group">
-
-                                    {{ Form::label('edate', 'End Date', ['class' => 'col-sm-2 ']) }}
+                                    <label for="sdate" class="col-sm-2">Start Date</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('end_date', null, ['class' => 'form-control', 'id' => 'enddatetime', 'readonly' => true]) }}
+                                        <input type="text" name="start_date" id="startdatetime" class="form-control" readonly>
                                     </div>
-
                                 </div>
+
                                 <div class="form-group">
-
-                                    {{ Form::label('femail', 'From Email', ['class' => 'col-sm-2']) }}
+                                    <label for="edate" class="col-sm-2">End Date</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('send_email_from', null, ['class' => 'form-control','data-toggle' => 'tooltip','data-placement' => 'bottom','title' => 'From Email']) }}
+                                        <input type="text" name="end_date" id="enddatetime" class="form-control" readonly>
                                     </div>
-
                                 </div>
+
                                 <div class="form-group">
-
-                                    {{ Form::label('femail', 'Sender Name', ['class' => 'col-sm-2']) }}
+                                    <label for="femail" class="col-sm-2">From Email</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('sender_name', null, ['class' => 'form-control','data-toggle' => 'tooltip','data-placement' => 'bottom','title' => 'Sender Name']) }}
+                                        <input type="text" name="send_email_from" id="femail" class="form-control"
+                                               data-toggle="tooltip" data-placement="bottom" title="From Email">
                                     </div>
+                                </div>
 
+                                <div class="form-group">
+                                    <label for="sender_name" class="col-sm-2">Sender Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="sender_name" id="sender_name" class="form-control"
+                                               data-toggle="tooltip" data-placement="bottom" title="Sender Name"
+                                               oninput="sanitizeInput(this)">
+                                    </div>
                                 </div>
 
 
@@ -106,18 +88,19 @@
                                 @include('admin.survey.images')
 
                                 <div class="form-group">
-                                    {{ Form::label('header_text', 'Header Text', ['class' => 'col-sm-2 ']) }}
+                                    <label for="header_text" class="col-sm-2">Header Text</label>
                                     <div class="col-sm-10">
-                                        {{ Form::textarea('header_text', null, ['class' => 'form-control', 'id' => 'header_text']) }}
+                                        <textarea name="header_text" id="header_text" class="form-control"></textarea>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    {{ Form::label('footer_text', 'Footer Text', ['class' => 'col-sm-2 ']) }}
+                                    <label for="footer_text" class="col-sm-2">Footer Text</label>
                                     <div class="col-sm-10">
-                                        {{ Form::textarea('footer_text', '© 2017 Ascendus. All Rights Reserved.', ['class' => 'form-control','id' => 'footer_text']) }}
+                                        <textarea name="footer_text" id="footer_text" class="form-control">© 2017 Ascendus. All Rights Reserved.</textarea>
                                     </div>
                                 </div>
+
 
                                 <div class="form-group">
                                     <div class="col-sm-10 col-sm-offset-2">
@@ -127,15 +110,17 @@
 
                                 <div class="form-group">
 
-                                    {{ Form::label('surl', 'Survey URL', ['class' => 'col-sm-2 ']) }}
+                                    <label for="surl" class="col-sm-2">Survey URL</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('url', null, ['id' => 'chatinput', 'class' => 'form-control url']) }}
+                                        <input type="text" name="url" id="chatinput" class="form-control url">
                                     </div>
+
 
                                 </div>
 
                                 <div class="form-group">
-                                    {{ Form::label('shuffle_questions', 'Shuffle Question', ['class' => 'col-sm-2 ']) }}
+                                    <label for="shuffle_questions" class="col-sm-2">Shuffle Question</label>
+
 
                                     <div class="col-sm-10">
                                         <input type="radio" id="sh_yes" name="shuffle_questions" value="1" checked>
@@ -147,26 +132,27 @@
                                 </div>
 
 
-
-
                                 <div class="form-group">
-
-                                    {{ Form::label('rater', 'Rater / Respondent', ['class' => 'col-sm-2 ']) }}
+                                    <label for="rater" class="col-sm-2">Rater / Respondent</label>
                                     <div class="col-sm-10">
-                                        <!--{{ Form::text('rater', null, ['class' => 'form-control']) }}-->
-                                        {{ Form::text('rater', null, ['placeholder' => 'Rater / Respondent','class' => 'raters form-control','id' => 'rater']) }}
-                                        <!-- {{ Form::hidden('rater_name', null, ['placeholder' => 'Rater / Respondent','class' => 'form-control','id' => 'rater']) }} -->
+                                        <input type="text" name="rater" id="rater" placeholder="Rater / Respondent" class="raters form-control" oninput="sanitizeInput(this)">
+
                                         <div id="chat-screen" class="well">
                                             <ul class="chat-screen list-unstyled">
-                                                <li class="multipleInput-value">self<span><input type="hidden" value="self"
-                                                            name="rater_value[]"></span><a href="javascript:void(0)"
-                                                        class="multipleInput-close" title="Remove"><i
-                                                            class="glyphicon glyphicon-remove-sign"></i></a></li>
+                                                <li class="multipleInput-value">
+                                                    self
+                                                    <span>
+                                                        <input type="hidden" value="self" name="rater_value[]">
+                                                    </span>
+                                                    <a href="javascript:void(0)" class="multipleInput-close" title="Remove">
+                                                        <i class="glyphicon glyphicon-remove-sign"></i>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
-
                                 </div>
+
                                 <!--
       <div class="form-group">
 
@@ -177,25 +163,20 @@
       </div>
     -->
 
-                                <div class="form-group">
-
-
-                                    <div class="col-sm-10 col-sm-offset-2 text-left">
-                                        {{ Form::checkbox('dimension_hide', 1, null, ['id' => 'dimension']) }}
-                                        {{ Form::label('dimension', 'Dimension Hide ', ['id' => 'dimension']) }}
-                                    </div>
-
+                            <div class="form-group">
+                                <div class="col-sm-10 col-sm-offset-2 text-left">
+                                    <input type="checkbox" name="dimension_hide" id="dimension" value="1">
+                                    <label for="dimension">Dimension Hide</label>
                                 </div>
+                            </div>
 
-                                <div class="form-group">
-
-
-                                    <div class="col-sm-10 col-sm-offset-2 text-left">
-                                        {{ Form::checkbox('participant_rater_manage', 1, null, ['id' => 'rater_chk']) }}
-                                        {{ Form::label('rater_chk', 'Participants can Manage Rater/Respondent ? ', ['id' => 'rater_chk']) }}
-                                    </div>
-
+                            <div class="form-group">
+                                <div class="col-sm-10 col-sm-offset-2 text-left">
+                                    <input type="checkbox" name="participant_rater_manage" id="rater_chk" value="1">
+                                    <label for="rater_chk">Participants can Manage Rater/Respondent?</label>
                                 </div>
+                            </div>
+
                                 <br />
                                 <div class="form-group">
 
@@ -224,16 +205,16 @@
 
     <!-- </form> -->
 
-    {{ Form::close() }}
+    </form>
 
 
-    {!! HTML::script('script/moment.js') !!}
-    {!! HTML::script('script/bootstrap-datetimepicker.js') !!}
-    {!! HTML::style('css/bootstrap-datetimepicker.min.css') !!}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap3-wysihtml5.min.css') }}">
 
-    {{ HTML::style('css/bootstrap3-wysihtml5.min.css') }}
+    <script src="{{ asset('script/moment.js') }}"></script>
+    <script src="{{ asset('script/bootstrap-datetimepicker.js') }}"></script>
+    <script src="{{ asset('script/bootstrap3-wysihtml5.js') }}"></script>
 
-    {{ HTML::script('script/bootstrap3-wysihtml5.js') }}
 
     <style>
         #printchatbox {
@@ -279,6 +260,7 @@
     </style>
     <script type="text/javascript">
         $(document).ready(function() {
+
             $('#footer_text,#header_text').wysihtml5({
                 events: {
                     load: function() {
@@ -488,7 +470,6 @@
             /*End Rater field validation*/
 
             /*Rater Field Keypress*/
-
             $('#rater').keydown(function(event) {
 
                 if (event.keyCode == 13 || event.keyCode == 9) {
@@ -501,8 +482,9 @@
                     });
 
                     if ($(this).val() != "" && append_val == true) {
-                        $('.chat-screen').append($('<li class="multipleInput-value" > ' + $("#rater")
-                            .val() + '<span><input type="hidden" value="' + $("#rater").val() +
+
+
+                        $('.chat-screen').append($('<li class="multipleInput-value" > ' + $(this).val() + '<span><input type="hidden" value="' + $(this).val() +
                                 '" name="rater_value[]"></span></li>')
                             .append($(
                                     '<a href="javascript:void(0)" class="multipleInput-close" title="Remove"><i class="glyphicon glyphicon-remove-sign"></i></a>'

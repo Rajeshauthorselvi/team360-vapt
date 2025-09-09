@@ -1,232 +1,278 @@
+<div id="questionadd-modal" class="modal fade" role="dialog">
 
- <div id="questionadd-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
 
+        <!-- Modal content-->
 
-
-                            <div class="modal-dialog modal-lg">
-
-
-
-                              <!-- Modal content-->
-
-                              <div class="modal-content">
+        <div class="modal-content">
 
 
 
-                      <form role="form" id="qedit-form">         
+            <form role="form" id="qedit-form">
 
-                   <div class="modal-body">
+                <div class="modal-body">
 
-                   <div class="form-group">
-                   <label class="col-sm-3">Question Dimension</label> 
-                   <div class="col-sm-9">
-                  {{Form::text('question_dimension',$question_dimension,['class'=>'form-control'])}}
-                   </div></div>
-
-
-                   <div class="form-group">
-                   <label class="col-sm-3">Question <span class="qtn-required">*</span></label> 
-                   <div class="col-sm-9">
-                  
-                   <input type="hidden" name="question_type" value="{{$question_type}}">
-                   <input type="hidden" name="display_order" value="{{$display_order}}">
-                   <input type="hidden" name="survey_id" value="{{$survey_id}}">
-                   <input type="hidden" name="question_id" value="">
-                   <input type="hidden" name="_method" value="POST">
-                   <input type="hidden" name="_token" value="{{csrf_token()}}">
-
-                   {{Form::textarea('question',null,['class'=>'form-control','rows'=>5])}}
-                   </div></div>
-
-
-
-
-            @if($question_type=="radio" || $question_type=="checkbox" || $question_type=="dropdown")
-<?php $i=1; ?>
-  @if(count($question_options)>0) 
-
-@foreach($question_options as $option_weight=>$option_text)
-                 @if($i==1)
-                  <div class="form-group no-margin">
-            	<label class="control-label col-sm-6" for="field1">Choices</label>
-            	<div class="controls col-sm-6"> 
-              
-       				<div class="field_wrapper">
-
-       				<div class="no-left-pad">
-       				<label>Option Text</label>
-                        <input class="form-control shrink" name="fields[]" value="{{$option_text}}" type="text" />
-
+                    <div class="form-group">
+                        <label class="col-sm-3">Question Dimension</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="question_dimension" value="{{ $question_dimension }}" class="form-control">
+                        </div>
                     </div>
 
-                  
-                    
-                    </div>
-         
-            </div>
-        </div>
 
+                    <div class="form-group">
+                        <label class="col-sm-3">Question <span class="qtn-required">*</span></label>
+                        <div class="col-sm-9">
 
-        <div class="form-group no-margin">
-        	<div class="controls col-sm-12"> 
-              
-       				<div class="field_wrapper">
-        	  <div class="col-sm-6 no-right-pad">
-                    <label>Option Weight</label>
-                        <input class="form-control shrink" name="option_weight[]" value="{{$option_weight}}" type="text" />
+                            <input type="hidden" name="question_type" value="{{$question_type}}">
+                            <input type="hidden" name="display_order" value="{{$display_order}}">
+                            <input type="hidden" name="survey_id" value="{{$survey_id}}">
+                            <input type="hidden" name="question_id" value="">
+                            <input type="hidden" name="_method" value="POST">
+                            <input type="hidden" name="_token" value="{{csrf_token()}}">
 
-                     </div>
-        </div></div></div>
-
-        @else
-        <div class="form-group no-margin"><div class="controls col-sm-6 col-sm-offset-6"><div class="field_wrapper"><div class="no-left-pad"><input class="form-control shrink" name="fields[]" type="text" value="{{$option_text}}"/></div></div></div></div>
-        <div class="form-group no-margin"><div class="controls col-sm-12"> <div class="field_wrapper"><div class="col-sm-6 no-right-pad"><input class="form-control shrink" name="option_weight[]" value="{{$option_weight}}" type="text" /> </div><div class="col-sm-2 col-sm-offset-4 no-pad"><a href="javascript:void(0);" class="btn btn-danger btn-add removeButton" type="button"> <span class="glyphicon glyphicon-minus"></span> </a></div></div></div></div>
-        @endif
-
-        <div class="clear-fix"></div>
-
-       <?php $i++;?>
-    @endforeach     
-            {{Form::hidden('opt_weight',$option_weight,['id'=>'opt_weight'])}}
-@else
-  @for($i=1;$i<=5;$i++)
-                 @if($i==1)
-                  <div class="form-group no-margin">
-            	<label class="control-label col-sm-6" for="field1">Choices</label>
-            	<div class="controls col-sm-6"> 
-              
-       				<div class="field_wrapper">
-
-       				<div class="no-left-pad">
-       				<label>Option Text</label>
-                        <input class="form-control shrink" name="fields[]" value="" type="text" />
-
+                            <textarea name="question" class="form-control" rows="5"></textarea>
+                        </div>
                     </div>
 
-                  
-                    
-                    </div>
-         
-            </div>
-        </div>
-
-
-        <div class="form-group no-margin">
-        	<div class="controls col-sm-12"> 
-              
-       				<div class="field_wrapper">
-        	  <div class="col-sm-6 no-right-pad">
-                    <label>Option Weight</label>
-                        <input class="form-control shrink" name="option_weight[]" value="{{$i}}" type="text" />
-
-                     </div>
-        </div></div></div>
-
-        @else
-        <div class="form-group no-margin"><div class="controls col-sm-6 col-sm-offset-6"><div class="field_wrapper"><div class="no-left-pad"><input class="form-control shrink" name="fields[]" type="text" /></div></div></div></div>
-        <div class="form-group no-margin"><div class="controls col-sm-12"> <div class="field_wrapper"><div class="col-sm-6 no-right-pad"><input class="form-control shrink" name="option_weight[]" value="{{$i}}" type="text" /> </div><div class="col-sm-2 col-sm-offset-4 no-pad"><a href="javascript:void(0);" class="btn btn-danger btn-add removeButton" type="button"> <span class="glyphicon glyphicon-minus"></span> </a></div></div></div></div>
-        @endif
-
-        <div class="clear-fix"></div>
-                   {{Form::hidden('opt_weight',5,['id'=>'opt_weight'])}}
-       
-         @endfor        
-
-
- @endif
-<div class="form-group no-margin" id="optionTemplate">
-   <div class="col-sm-12">
-     <a href="#" class="addButton btn btn-primary pull-right" title="Add field"><span class="glyphicon glyphicon-plus">Add</span></a>
-   </div>
- </div>
- @endif
-
-                   <div class="form-group">
-                   <label class="col-sm-3">Question Required<span class="qtn-required">*</span></label>
-                   <div class="col-sm-9">
-
-              
-                    {{Form::radio('question_required',1,1,['id'=>'qreqy'])}} 
-                    {{Form::label('qreqy','Yes ')}}
-
-                    {{Form::radio('question_required',0,0,['id'=>'qreqn'])}} 
-                    {{Form::label('qreqn','No ')}}
-                   
-                   </div></div>
 
 
 
-                   @if($question_type=="radio")
+                    @if($question_type=="radio" || $question_type=="checkbox" || $question_type=="dropdown")
+                    <?php $i=1; ?>
+                    @if(count($question_options)>0)
 
+                    @foreach($question_options as $option_weight=>$option_text)
+                    @if($i==1)
+                    <div class="form-group no-margin">
+                        <label class="control-label col-sm-6" for="field1">Choices</label>
+                        <div class="controls col-sm-6">
 
-                   <div class="form-group">
-                   <label class="col-sm-3">Add "other" option</label>
-                   <div class="col-sm-9">
+                            <div class="field_wrapper">
 
-
-                    {{Form::radio('addother',1,0,['id'=>'addothery'])}} 
-                    {{Form::label('addothery','Yes ')}}
-
-                    {{Form::radio('addother',0,1,['id'=>'addothern'])}} 
-                    {{Form::label('addothern','No ')}}
-                   
-                   </div></div>
-
-
-                    @endif
-               
-
-             
-
-
-                                <div class="modal-footer">
-
-                                <button type="button" class="btn btn-danger cancel" id="revert" data-dismiss="modal">Cancel</button>
-
-                                <button type="submit" id="questionedit-submit-btnn" class="btn btn-success" >Save</button>
-
-                                {{HTML::Image("images/img_load.gif","ajax_load",["class"=>"load-ajximage"])}}
+                                <div class="no-left-pad">
+                                    <label>Option Text</label>
+                                    <input class="form-control shrink" name="fields[]" value="{{$option_text}}"
+                                        type="text" />
 
                                 </div>
 
-                             {{Form::close()}}
 
-                              </div>
-
-                          
 
                             </div>
-                           
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group no-margin">
+                        <div class="controls col-sm-12">
+
+                            <div class="field_wrapper">
+                                <div class="col-sm-6 no-right-pad">
+                                    <label>Option Weight</label>
+                                    <input class="form-control shrink" name="option_weight[]" value="{{$option_weight}}"
+                                        type="text" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @else
+                    <div class="form-group no-margin">
+                        <div class="controls col-sm-6 col-sm-offset-6">
+                            <div class="field_wrapper">
+                                <div class="no-left-pad"><input class="form-control shrink" name="fields[]" type="text"
+                                        value="{{$option_text}}" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group no-margin">
+                        <div class="controls col-sm-12">
+                            <div class="field_wrapper">
+                                <div class="col-sm-6 no-right-pad"><input class="form-control shrink"
+                                        name="option_weight[]" value="{{$option_weight}}" type="text" /> </div>
+                                <div class="col-sm-2 col-sm-offset-4 no-pad"><a href="javascript:void(0);"
+                                        class="btn btn-danger btn-add removeButton" type="button"> <span
+                                            class="glyphicon glyphicon-minus"></span> </a></div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    <div class="clear-fix"></div>
+
+                    <?php $i++;?>
+                    @endforeach
+                    <input type="hidden" name="opt_weight" value="{{ $option_weight }}" id="opt_weight">
+
+                    @else
+                    @for($i=1;$i<=5;$i++) @if($i==1) <div class="form-group no-margin">
+                        <label class="control-label col-sm-6" for="field1">Choices</label>
+                        <div class="controls col-sm-6">
+
+                            <div class="field_wrapper">
+
+                                <div class="no-left-pad">
+                                    <label>Option Text</label>
+                                    <input class="form-control shrink" name="fields[]" value="" type="text" />
+
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                </div>
+
+
+                <div class="form-group no-margin">
+                    <div class="controls col-sm-12">
+
+                        <div class="field_wrapper">
+                            <div class="col-sm-6 no-right-pad">
+                                <label>Option Weight</label>
+                                <input class="form-control shrink" name="option_weight[]" value="{{$i}}" type="text" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @else
+                <div class="form-group no-margin">
+                    <div class="controls col-sm-6 col-sm-offset-6">
+                        <div class="field_wrapper">
+                            <div class="no-left-pad"><input class="form-control shrink" name="fields[]" type="text" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group no-margin">
+                    <div class="controls col-sm-12">
+                        <div class="field_wrapper">
+                            <div class="col-sm-6 no-right-pad"><input class="form-control shrink" name="option_weight[]"
+                                    value="{{$i}}" type="text" /> </div>
+                            <div class="col-sm-2 col-sm-offset-4 no-pad"><a href="javascript:void(0);"
+                                    class="btn btn-danger btn-add removeButton" type="button"> <span
+                                        class="glyphicon glyphicon-minus"></span> </a></div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                <div class="clear-fix"></div>
+                <input type="hidden" name="opt_weight" value="5" id="opt_weight">
+
+                @endfor
+
+
+                @endif
+                <div class="form-group no-margin" id="optionTemplate">
+                    <div class="col-sm-12">
+                        <a href="#" class="addButton btn btn-primary pull-right" title="Add field"><span
+                                class="glyphicon glyphicon-plus">Add</span></a>
+                    </div>
+                </div>
+                @endif
+
+                <div class="form-group">
+                    <label class="col-sm-3">Question Required<span class="qtn-required">*</span></label>
+                    <div class="col-sm-9">
+
+
+                        <input type="radio" name="question_required" value="1" id="qreqy" checked>
+                        <label for="qreqy">Yes</label>
+
+                        <input type="radio" name="question_required" value="0" id="qreqn">
+                        <label for="qreqn">No</label>
+
+
+                    </div>
+                </div>
+
+
+
+                @if($question_type=="radio")
+
+
+                <div class="form-group">
+                    <label class="col-sm-3">Add "other" option</label>
+                    <div class="col-sm-9">
+
+
+                        <input type="radio" name="addother" value="1" id="addothery">
+                        <label for="addothery">Yes</label>
+
+                        <input type="radio" name="addother" value="0" id="addothern" checked>
+                        <label for="addothern">No</label>
+
+                    </div>
+                </div>
+
+                @endif
+
+
+
+
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-danger cancel" id="revert" data-dismiss="modal">Cancel</button>
+
+                    <button type="submit" id="questionedit-submit-btnn" class="btn btn-success">Save</button>
+
+                    <img src="{{ asset('images/img_load.gif') }}" alt="ajax_load" class="load-ajximage">
+
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+    </div>
+
 </div>
 
 
 <style type="text/css">
-	.form-group {
-    display: inline-block;
-    position: relative;
-    width: 100%;
-}
-.form-group.no-margin{float: left;width: 50%;}
-.no-left-pad {
-    padding-left: 0;
-}
-.no-right-pad {
-    padding-right: 0;
-}
-.no-pad {
-    padding: 0;
-}
-#optionTemplate {
-    clear: both;
-    width: 100%;
-}
+    .form-group {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+    }
+
+    .form-group.no-margin {
+        float: left;
+        width: 50%;
+    }
+
+    .no-left-pad {
+        padding-left: 0;
+    }
+
+    .no-right-pad {
+        padding-right: 0;
+    }
+
+    .no-pad {
+        padding: 0;
+    }
+
+    #optionTemplate {
+        clear: both;
+        width: 100%;
+    }
 </style>
 <script type="text/javascript">
-
-
-$(document).keyup(function(e) {
-     if (e.keyCode == 27) { 
- $('.cancel').click(); 
+    $(document).keyup(function(e) {
+     if (e.keyCode == 27) {
+ $('.cancel').click();
     }
 });
 $(document).ready(function(){
@@ -313,8 +359,8 @@ $(document).ready(function(){
 
                     }
                 };
-            
-            
+
+
 	@endif
 	$('#qedit-form').bootstrapValidator({
             framework: 'bootstrap',
@@ -329,9 +375,9 @@ $(document).ready(function(){
 
              // Add button click handler
         .on('click', '.addButton', function() {
-                var count=parseInt($('#opt_weight').val())+1;  
+                var count=parseInt($('#opt_weight').val())+1;
                 $('#opt_weight').val(count);
-                
+
             var $template = $('#optionTemplate'),
                 $clone1    = $template
                                 .clone()
@@ -372,7 +418,7 @@ $(document).ready(function(){
             $('#qedit-form').bootstrapValidator('removeField', $option);
 
 
-              
+
 
             // Remove element containing the option
             $row2.remove();
@@ -418,7 +464,7 @@ $(document).ready(function(){
 					          },
 					          success:function(data){
 
-                      if(data.error && data.error!="") 
+                      if(data.error && data.error!="")
                       {
                          $('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Oops! </strong> '+data.error+'</div>').insertBefore('.form-group:nth-child(1)');
 
@@ -428,7 +474,7 @@ $(document).ready(function(){
 
                       $('#fields li:last').after(html);
 
-					          
+
 				              $('#questionadd-modal').modal('hide');
 				              $('body').removeClass('modal-open');
 											$('.modal-backdrop').remove();
@@ -438,15 +484,15 @@ $(document).ready(function(){
                      }
 
 
-										
 
-					          	
+
+
 					          }
 
 					      });
-			      } 
-			    
-			  
+			      }
+
+
         });
         });
 

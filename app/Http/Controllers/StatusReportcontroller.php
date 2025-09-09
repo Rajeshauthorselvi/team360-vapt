@@ -223,7 +223,7 @@ class StatusReportcontroller extends Controller
             }
 
         }
-        
+
         return view('admin.report.text_response')
             ->with('responses', $result_set)
             ->with('survey_name', $survey_name)
@@ -271,10 +271,11 @@ class StatusReportcontroller extends Controller
             ->orderBy('user_survey_respondent.participant_id')
             ->pluck('users.id as participant_id', DB::raw('CONCAT(fname, " ", lname) AS fname'))
             ->toArray();
+            $responses =$question_id=$user_id=$participant_details= array();
             if ($request->get('users')) {
                 $user_id = $request->get('users');
                 foreach ($user_id as $key => $single_par) {
-      
+
                 // dd($user_id);
 
                 $participant_details = DB::table('responses')

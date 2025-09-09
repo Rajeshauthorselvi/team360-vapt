@@ -5,7 +5,7 @@
 <div class="container">
 	<div class="panel panel-default">
 
-   <div class="panel-heading"> 
+   <div class="panel-heading">
 	<div class="row text-center">
 	<h4><strong>List of Participants</strong></h4>
 	</div>
@@ -47,7 +47,7 @@
 		@if($result->survey_status=='3')
 		<td><a href="{{ route('report_dashboard',['participant_id'=>$result->participant_id,'survey_id'=>$survey_id]) }}" ><span class="glyphicon glyphicon-align-justify" style="color:#337ab7" data-toggle="tooltip" title="Reports"></span></a></td>
 		@else
-		<td>-</td>	
+		<td>-</td>
 		@endif
 		<td>
 		<?php
@@ -78,14 +78,15 @@
 
 
 
-{!! HTML::script('script/dataTable/jquery.dataTables.min.js') !!}
-{!! HTML::style('css/dataTable/jquery.dataTables.min.css') !!}
-{{ HTML::script('script/sweetalert.min.js') }}
-{{ HTML::style('css/sweetalert.css') }}
+<script src="{{ asset('script/dataTable/jquery.dataTables.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/dataTable/jquery.dataTables.min.css') }}">
 
+<script src="{{ asset('script/sweetalert.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/sweetalert.css') }}">
 
-{!! HTML::script('js/dataTables.bootstrap4.min.js') !!}
-{!! HTML::style('css/dataTable/dataTables.bootstrap4.min.css') !!}
+<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/dataTable/dataTables.bootstrap4.min.css') }}">
+
 
 
 

@@ -7,9 +7,8 @@
     <div class="container bootstrap snippet">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
-                {!! Form::open(['route'
-                =>['user_login',config('site.survey_slug')],'Method'=>'POST','class'=>'form-horizontal','id'=>'user-login','name'=>'userform'])
-                !!}
+                <form method="POST" action="{{ route('user_login', config('site.survey_slug')) }}" class="form-horizontal" id="user-login" name="userform">
+                @csrf
                 <div class="panel panel-info  login-box">
                     <div class="panel-heading">
                         <h3 class="panel-title">
@@ -30,16 +29,14 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    {!!
-                                    Form::email('email',null,['class'=>'form-control','id'=>'email','placeholder'=>'Email','autocomplete'=>'off'])
-                                    !!}
+                                    <input type="email" name="email" id="email" class="form-control" placeholder="Email" autocomplete="off">
+
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    {!!
-                                    Form::password('password',['class'=>'form-control','id'=>'password','placeholder'=>'Password','autocomplete'=>'off'])
-                                    !!}
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Password" autocomplete="off">
+
                                 </div>
                             </div>
                             @if (env('APP_ENV')=="production")
@@ -60,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                {!! Form::close() !!}
+                </form>
             </div>
         </div>
     </div>

@@ -1,133 +1,165 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| This file is where you may define all of the routes that are handled
-| by your application. Just tell Laravel the URIs it should respond
-| to using a Closure or controller method. Build something great!
-|
-*/
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SurveyController;
+use App\Http\Controllers\AddusersController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionImportController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\SurveyDistributeController;
+use App\Http\Controllers\DownloadStatusReport;
+use App\Http\Controllers\RespondentController;
+use App\Http\Controllers\ParticipantReportController;
+use App\Http\Controllers\StatusReportcontroller;
+use App\Http\Controllers\ExportStatusController;
+use App\Http\Controllers\ResendAcess;
+use App\Http\Controllers\previewController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserSurveyController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportController1;
+use App\Http\Controllers\SurveyUsersPasswordController;
+use App\Http\Controllers\UserRespondentController;
+use App\Http\Controllers\UserDistributeController;
+use App\Http\Controllers\LoginController;
 
 
 Route::get('dummy-execution', 'AddusersController@DummyExecution');
 Route::group(['middleware' => ['guest']], function () {
     Route::group(['prefix' => '{survey_name}'], function () {
-        Route::get('login', ['as' => 'login', 'uses' => 'UserSurveyController@create']);
-        Route::post('login', ['as' => 'user_login', 'uses' => 'UserSurveyController@store']);
+        Route::get('login', [UserSurveyController::class, 'create'])->name('login');
+        Route::post('login', [UserSurveyController::class, 'store'])->name('user_login');
+
     });
 
-    Route::get('login', ['as' => 'login', 'uses' => 'LoginController@index']);
-    Route::post('login', ['as' => 'login', 'uses' => 'LoginController@post_login']);
-    Route::get('/', ['as' => 'clogin', 'uses' => 'LoginController@index']);
+    Route::get('login', [LoginController::class, 'index'])->name('login');
+    Route::post('login', [LoginController::class, 'post_login'])->name('login');
+    Route::get('/', [LoginController::class, 'index'])->name('clogin');
 
-    Route::post('reset', ['as' => 'reset_pass_index', 'uses' => 'LoginController@ResetPasswordindex']);
+    Route::post('reset', [LoginController::class, 'ResetPasswordindex'])->name('reset_pass_index');
 
     Route::group(['prefix' => 'os'], function () {
-        Route::get('{open_survey_name}', ['as' => 'opensurvey', 'uses' => 'LoginController@open_survey']);
-        Route::post('ostore', ['as' => 'ostore', 'uses' => 'LoginController@store_open_survey']);
-        Route::get('thankyou/{open_survey_name}', ['as' => 'othankyou', 'uses' => 'LoginController@thankyou_screen']);
+        Route::get('{open_survey_name}', [LoginController::class, 'open_survey'])->name('opensurvey');
+        Route::post('ostore', [LoginController::class, 'store_open_survey'])->name('ostore');
+        Route::get('thankyou/{open_survey_name}', [LoginController::class, 'thankyou_screen'])->name('othankyou');
     });
 });
 
 
-Route::get('status_report', ['as' => 'status.report', 'uses' => 'DownloadStatusReport@SurveyReport']);
-Route::get('status_summary', ['as' => 'summary.report', 'uses' => 'DownloadStatusReport@SummaryReport']);
+Route::get('status_report', [DownloadStatusReport::class,'SurveyReport'])->name('status.report');
+Route::get('status_summary', [DownloadStatusReport::class,'SummaryReport'])->name('summary.report');
 
 Route::group(['middleware' => ['auth', 'admin']], function () {
 
-    Route::get('validate_survey', ['as' => 'check_survey', 'uses' => 'SurveyController@checkSurvey']);
-    Route::get('validate_ques', ['as' => 'check_question', 'uses' => 'QuestionController@checkQuestion']);
-    Route::get('validate_respondent', ['as' => 'checkparticipant', 'uses' => 'RespondentController@checkparticipant']); //check respondent email already exist
-    Route::get('checkparticipant_email', ['as' => 'checkparticipant_email', 'uses' => 'AddusersController@checkparticipant_email']); //check participant already exists for this survey
+    Route::get('validate_survey', [SurveyController::class,'checkSurvey'])->name('check_survey');
+
+    Route::get('validate_ques',[QuestionController::class,'checkQuestion'])->name('check_question');
+
+
+    Route::get('validate_respondent',[RespondentController::class,'checkparticipant'])->name('checkparticipant');
+
+    Route::get('checkparticipant_email',[AddusersController::class,'checkparticipant_email'])->name('checkparticipant_email');
+
+
     Route::get('searchajax', array('as' => 'searchajax', 'uses' => 'SurveyController@autoComplete'));
-    Route::resource('questions', 'QuestionController');
-    Route::get('delete-all', ['as' => 'delete.questions', 'uses' => 'QuestionController@DeleteAllQuestions']);
-    Route::resource('survey', 'SurveyController');
-    Route::get('delete_survey', ['as' => 'delete.survey', 'uses' => 'SurveyController@DeleteSurvey']);
-    Route::patch('copy-survey', ['as' => 'copy-survey', 'uses' => 'SurveyController@copysurvey']);
-    Route::get('home', ['as' => 'admin.dashboard', 'uses' => 'SurveyController@dashboard']);
-    Route::get('admin-dashboard', ['as' => 'admin.dashboard', 'uses' => 'SurveyController@dashboard']);
-    Route::resource('addusers', 'AddusersController');
-    Route::post('delete_users',['as'=>'delete.users','uses'=>'AddusersController@DeleteUsers']);
-    Route::resource('respondent', 'RespondentController');
-    Route::get('single_delete_respondent',['as'=>'single.delete.respondent','uses'=>'RespondentController@SingleDeleteRespondent']);
-    Route::post('delete_respondent',['as'=>'delete.respondent','uses'=>'RespondentController@DeleteRespondents']);
+    Route::resource('questions', QuestionController::class);
+
+    Route::get('delete-all', [QuestionController::class,'DeleteAllQuestions'])->name('delete.questions');
+
+    Route::resource('survey', SurveyController::class);
+
+    Route::get('delete_survey', [SurveyController::class,'DeleteSurvey'])->name('delete.survey');
+    Route::patch('copy-survey', [SurveyController::class,'copysurvey'])->name('copy-survey');
+    Route::get('home', [SurveyController::class,'dashboard'])->name('admin.dashboard');
+    Route::get('admin-dashboard', [SurveyController::class,'dashboard'])->name('admin.dashboard');
+
+    Route::resource('addusers', AddusersController::class);
+
+    Route::post('delete_users',[AddusersController::class,'DeleteUsers'])->name('delete.users');
+    Route::resource('respondent', RespondentController::class);
+    Route::get('single_delete_respondent', [RespondentController::class, 'SingleDeleteRespondent'])->name('single.delete.respondent');
+    Route::post('delete_respondent', [RespondentController::class, 'DeleteRespondents'])->name('delete.respondent');
+
 
 //---reports---//
-    Route::resource('participantreport', 'ParticipantReportController');
-    Route::get('report_dashboard', ['as' => 'report_dashboard', 'uses' => 'ParticipantReportController@ReportDashboard']);
-    Route::get('itemwise_others_sort', ['as' => 'itemwise_others_sort', 'uses' => 'ParticipantReportController@itemwise_others_sort']);
-    Route::get('topandbottom', ['as' => 'topandbottom', 'uses' => 'ParticipantReportController@top_and_bottom']);
-    Route::get('converging_diverging', ['as' => 'converging_diverging', 'uses' => 'ParticipantReportController@converging_diverging']);
-    Route::get('gap_report', ['as' => 'gap_report', 'uses' => 'ParticipantReportController@gap_report']);
-    Route::get('dimension2', ['as' => 'dimension2', 'uses' => 'ParticipantReportController@DimensionTwoController']);
-    Route::get('status-summary',['as'=>'status.status_summary','uses'=>'StatusReportcontroller@StatusSummaryController']);
-    Route::get('status_summary_export',['as'=>'export.status_summary','uses'=>'ExportStatusController@StatusSummary']);
+    Route::resource('participantreport', ParticipantReportController::class);
+    Route::get('report_dashboard',[ParticipantReportController::class,'ReportDashboard'])->name('report_dashboard');
+    Route::get('itemwise_others_sort',[ParticipantReportController::class,'itemwise_others_sort'])->name('itemwise_others_sort');
+    Route::get('topandbottom',[ParticipantReportController::class,'top_and_bottom'])->name('topandbottom');
+    Route::get('converging_diverging',[ParticipantReportController::class,'converging_diverging'])->name('converging_diverging');
+
+    Route::get('gap_report',[ParticipantReportController::class,'gap_report'])->name('gap_report');
+    Route::get('dimension2',[ParticipantReportController::class,'DimensionTwoController'])->name('dimension2');
+
+    Route::get('status-summary',[StatusReportcontroller::class,'StatusSummaryController'])->name('status.status_summary');
+    Route::get('status_summary_export',[ExportStatusController::class,'StatusSummary'])->name('export.status_summary');
+
+
 
 //---reports---//
 
-    Route::post('importusers', ['as' => 'importusers', 'uses' => 'AddusersController@importusers']);
-    Route::post('importRespondent', ['as' => 'importRespondent', 'uses' => 'RespondentController@importRespondent']);
-
-    Route::get('import-respondent', ['as' => 'respondent.only_importrespondent', 'uses' => 'RespondentController@only_importrespondent']);
-    Route::post('import-respondents', ['as' => 'import_respondents', 'uses' => 'RespondentController@only_importrespondent_store']);
-    Route::get('respondent-download', ['as' => 'respondent.download', 'uses' => 'RespondentController@respondent_download']);
-
-    Route::resource('distribute', 'SurveyDistributeController');
-
-    Route::post('status_reminder', ['as' => 'status_reminder', 'uses' => 'SurveyDistributeController@status_reminder']);  //status reminder in distribute
-
-    Route::resource('import-questions', 'QuestionImportController');
-    Route::resource('theme', 'ThemeController');
-
-    Route::resource('test', 'TestController');  //dhinesh
-
-    Route::post('questionEdit', ['as' => 'questionEdit', 'uses' => 'QuestionController@questionEdit']);
-
-    Route::post('questionEditGrid', ['as' => 'questionEditGrid', 'uses' => 'QuestionController@questionEditGrid']);
-
-    Route::get('questions_group', ['as' => 'questions_group', 'uses' => 'QuestionController@QuestionGroupController']);
-
-    Route::post('questions_post_group', ['as' => 'questions_post_group', 'uses' => 'QuestionController@QuestionpostController']);
+    Route::post('importusers', [AddusersController::class,'importusers'])->name('importusers');
+    Route::post('importusers', [AddusersController::class,'importusers'])->name('importusers');
+    Route::post('importRespondent', [AddusersController::class,'importusers'])->name('importusers');
 
 
-    Route::get('resend', ['as' => 'resend.resendacess', 'uses' => 'ResendAcess@ResendAccessDetails']);
+    Route::post('importRespondent', [RespondentController::class, 'importRespondent'])->name('importRespondent');
 
-    Route::get('reopen', ['as' => 'addusers.Reopen_survey', 'uses' => 'AddusersController@Reopen_survey']);
-    Route::get('clear_response', ['as' => 'addusers.Clear_response', 'uses' => 'AddusersController@Clear_response']);
-
-
-    Route::get('reopen_survey', ['as' => 'respondent.reopen_survey', 'uses' => 'RespondentController@reopen_survey']);
-    Route::get('clear_responses', ['as' => 'respondent.clear_response', 'uses' => 'RespondentController@clear_response']);
+    Route::get('import-respondent', [RespondentController::class, 'only_importrespondent'])->name('respondent.only_importrespondent');
+    Route::post('import-respondents', [RespondentController::class, 'only_importrespondent_store'])->name('import_respondents');
+    Route::get('respondent-download', [RespondentController::class, 'respondent_download'])->name('respondent.download');
 
 
-    Route::get('status-report', ['as' => 'status.status_report', 'uses' => 'StatusReportcontroller@ReportController']);
-    Route::post('export_status_report', ['as' => 'export.status_report', 'uses' => 'ExportStatusController@ExportStatus']);
+    Route::resource('distribute', SurveyDistributeController::class);
 
-    Route::get('text_response', ['as' => 'text.text_response', 'uses' => 'StatusReportcontroller@textresponseIndex']);
-    Route::post('text_response', ['as' => 'post.text_response', 'uses' => 'StatusReportcontroller@textresponseIndex']);
-    Route::get('export_text_response', ['as' => 'export.text_response', 'uses' => 'ExportStatusController@text_response']);
+    Route::post('status_reminder', [SurveyDistributeController::class,'status_reminder'])->name('status_reminder');
 
-    Route::get('rawscore', ['as' => 'status.rawscore', 'uses' => 'StatusReportcontroller@RawscoreController']);
-    Route::post('raw_response', ['as' => 'post.raw_response', 'uses' => 'StatusReportcontroller@RawscoreController']);
-    Route::get('raw_response', ['as' => 'post.raw_response', 'uses' => 'StatusReportcontroller@RawscoreController']);
-    Route::get('export_rawscore_report', ['as' => 'export.rawscore_report', 'uses' => 'ExportStatusController@RawscoreExport']);
+    Route::resource('import-questions', QuestionImportController::class);
+    Route::resource('theme', ThemeController::class);
+
+    Route::resource('test', TestController::class);  //dhinesh
+
+    Route::post('questionEdit', [QuestionController::class,'questionEdit'])->name('questionEdit');
+    Route::post('questionEditGrid', [QuestionController::class,'questionEditGrid'])->name('questionEditGrid');
+
+
+    Route::get('questions_group', [QuestionController::class,'QuestionGroupController'])->name('questions_group');
+
+
+    Route::post('questions_post_group', [QuestionController::class,'QuestionpostController'])->name('questions_post_group');
+
+    Route::get('resend', [ResendAcess::class, 'ResendAccessDetails'])->name('resend.resendacess');
+
+    Route::get('reopen', [AddusersController::class, 'Reopen_survey'])->name('addusers.Reopen_survey');
+    Route::get('clear_response', [AddusersController::class, 'Clear_response'])->name('addusers.Clear_response');
+
+    Route::get('reopen_survey', [RespondentController::class, 'reopen_survey'])->name('respondent.reopen_survey');
+    Route::get('clear_responses', [RespondentController::class, 'clear_response'])->name('respondent.clear_response');
+
+    Route::get('status-report', [StatusReportcontroller::class, 'ReportController'])->name('status.status_report');
+    Route::post('export_status_report', [ExportStatusController::class, 'ExportStatus'])->name('export.status_report');
+
+    Route::get('text_response', [StatusReportcontroller::class, 'textresponseIndex'])->name('text.text_response');
+    Route::post('text_response', [StatusReportcontroller::class, 'textresponseIndex'])->name('post.text_response');
+    Route::get('export_text_response', [ExportStatusController::class, 'text_response'])->name('export.text_response');
+
+    Route::get('rawscore', [StatusReportcontroller::class, 'RawscoreController'])->name('status.rawscore');
+    Route::post('raw_response', [StatusReportcontroller::class, 'RawscoreController'])->name('post.raw_response');
+    Route::get('raw_response', [StatusReportcontroller::class, 'RawscoreController'])->name('post.raw_response');
+    Route::get('export_rawscore_report', [ExportStatusController::class, 'RawscoreExport'])->name('export.rawscore_report');
 
 //Route::get('participant_report',['as'=>'participant.participant_report','uses'=>'StatusReportcontroller@participant_report']);
 
-    Route::get('question_export', ['as' => 'ques.ques_export', 'uses' => 'QuestionController@downloadQuesController']);
+Route::get('question_export', [QuestionController::class, 'downloadQuesController'])->name('ques.ques_export');
 
+Route::get('question_exportss', [StatusReportcontroller::class, 'download_raw_score_QuesController'])->name('raw_core_ques.ques_export');
 
-    Route::get('question_exportss', ['as' => 'raw_core_ques.ques_export', 'uses' => 'StatusReportcontroller@download_raw_score_QuesController']);
+Route::get('question_exportsss', [StatusReportcontroller::class, 'download_text_response_QuesController'])->name('text_response_ques.ques_export');
 
-    Route::get('question_exportsss', ['as' => 'text_response_ques.ques_export', 'uses' => 'StatusReportcontroller@download_text_response_QuesController']);
+Route::get('prev_login', [previewController::class, 'index'])->name('prev_login');
+Route::get('prev_ques', [previewController::class, 'questionpreview'])->name('prev_question');
 
-
-    Route::get('prev_login', ['as' => 'prev_login', 'uses' => 'previewController@index']);
-    Route::get('prev_ques', ['as' => 'prev_question', 'uses' => 'previewController@questionpreview']);
 
 
     /*dhinesh */
@@ -139,26 +171,28 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
 
 //Route::get('report_dashboard',['as'=>'report_dashboard', 'uses'=>'ReportController@ReportDashboard']);
 
-//Dimension Report 1
-    Route::get('diminsion1', ['as' => 'diminsion1', 'uses' => 'ReportController@DimensionOneController']);
-// Route::get('diminsion1_download',['as'=>'diminsion1_download', 'uses'=>'ReportController@DiminsionReportDownload']);
+// Dimension Report 1
+Route::get('diminsion1', [ReportController::class, 'DimensionOneController'])->name('diminsion1');
+// Route::get('diminsion1_download', [ReportController::class, 'DiminsionReportDownload'])->name('diminsion1_download');
 
-//Dimension Report 2
-    Route::get('diminsion2', ['as' => 'diminsion2', 'uses' => 'ReportController@DimensionTwoController']);
+// Dimension Report 2
+Route::get('diminsion2', [ReportController::class, 'DimensionTwoController'])->name('diminsion2');
 
-//Dimension Item report
-    Route::get('diminsion_item', ['as' => 'diminsion_item', 'uses' => 'ReportController@DimensionItemController']);
-//open Ended Report
-    Route::get('diminsion_open_ended', ['as' => 'diminsion_open_ended', 'uses' => 'ReportController@OpenEndedReport']);
+// Dimension Item report
+Route::get('diminsion_item', [ReportController::class, 'DimensionItemController'])->name('diminsion_item');
 
-//Item Wise Self (Self & Others)
-    Route::get('item_wise_self', ['as' => 'item_wise_self', 'uses' => 'ReportController@ItemWise']);
+// Open Ended Report
+Route::get('diminsion_open_ended', [ReportController::class, 'OpenEndedReport'])->name('diminsion_open_ended');
 
-//report Based on Dimension
-    Route::get('question_dimension_based', ['as' => 'question_dimension_based', 'uses' => 'ReportController1@QuestiondimensionBased']);
-    Route::get('question_dimension', ['as' => 'question_dimension', 'uses' => 'ReportController1@ReportQuestionDimension']);
+// Item Wise Self (Self & Others)
+Route::get('item_wise_self', [ReportController::class, 'ItemWise'])->name('item_wise_self');
 
-    Route::resource('users-password', 'SurveyUsersPasswordController');
+// Report Based on Dimension
+Route::get('question_dimension_based', [ReportController1::class, 'QuestiondimensionBased'])->name('question_dimension_based');
+Route::get('question_dimension', [ReportController1::class, 'ReportQuestionDimension'])->name('question_dimension');
+
+Route::resource('users-password', SurveyUsersPasswordController::class);
+
 
 });
 
@@ -170,24 +204,27 @@ Route::group(['middleware' => ['auth', 'user']], function () {
                 return redirect()->route('user.dashboard',$survey_name);
             });*/
 
-        Route::resource('user', 'UserController');
+            Route::resource('user', UserController::class);
 
-        Route::get('thankyou', ['as' => 'thankyou_screen', 'uses' => 'UserController@create']);
+            Route::get('thankyou', [UserController::class, 'create'])->name('thankyou_screen');
 
-        Route::get('user-dashboard', ['as' => 'user.dashboard', 'uses' => 'UserSurveyController@index']);
+            Route::get('user-dashboard', [UserSurveyController::class, 'index'])->name('user.dashboard');
 
-        Route::get('change-password/{user_id}', ['as' => 'change-password', 'uses' => 'UserSurveyController@show']);
-        Route::patch('change-password/update', ['as' => 'change-password', 'uses' => 'UserSurveyController@update']);
+            Route::get('change-password/{user_id}', [UserSurveyController::class, 'show'])->name('change-password');
+            Route::patch('change-password/update', [UserSurveyController::class, 'update'])->name('change-password');
 
-        Route::get('signout', ['as' => 'signout', 'uses' => 'UserSurveyController@signout']);
+            Route::get('signout', [UserSurveyController::class, 'signout'])->name('signout');
 
-        Route::resource('manage-respondent', 'UserRespondentController');
-        Route::resource('manage-email', 'UserDistributeController');
-        Route::post('import_Respondent', ['as' => 'import_Respondent', 'uses' => 'UserRespondentController@importRespondent']);
+            Route::resource('manage-respondent', UserRespondentController::class);
+            Route::resource('manage-email', UserDistributeController::class);
+
+            Route::post('import_Respondent', [UserRespondentController::class, 'importRespondent'])->name('import_Respondent');
+
 
     });
 
-    Route::get('resend_access', ['as' => 'resend.resendaccess', 'uses' => 'ResendAcess@ResendAccessDetails']);
+    Route::get('resend_access', [ResendAcess::class, 'ResendAccessDetails'])->name('resend.resendaccess');
+
 
 
 });

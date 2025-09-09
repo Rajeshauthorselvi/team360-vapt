@@ -6,11 +6,9 @@
 
 
 
-{{ HTML::style('css/bootstrap3-wysihtml5.min.css') }}
+<link rel="stylesheet" href="{{ asset('css/bootstrap3-wysihtml5.min.css') }}">
+<script src="{{ asset('script/bootstrap3-wysihtml5.js') }}"></script>
 
-
-
-{{ HTML::script('script/bootstrap3-wysihtml5.js') }}
 
 
 
@@ -35,103 +33,54 @@
             <div class="col-md-12 well">
 
                 <h3 class="need-margin-bottom-forstrip text-center">Build Questions</h3>
-
-
-
-
-
-
-
                            @if ($errors->any())
-
-                                  <div class="alert alert-danger fade in">
-
-
-
-                                <a href="#" class="close" data-dismiss="alert">&times;</a>
-
-
-
-                                <strong>Error!</strong> A problem has been occurred while submitting form.<br>
-
-                                <ul>
-
-                                {!! implode('', $errors->all('<li class="text-danger">:message</li>')) !!}
-
-
-
-                                 </ul> </div>
-
-                                @endif
+                                <div class="alert alert-danger fade in">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                        <strong>Error!</strong> A problem has been occurred while submitting form.<br>
+                                        <ul>
+                                            {!! implode('', $errors->all('<li class="text-danger">:message</li>')) !!}
+                                        </ul>
+                                </div>
+                            @endif
 
     <div class="container col-xs-12 text-center">
 
         <div class="row clearfix">
-
-		     <div class="col-md-3 column {{ ($response>0) ? 'disableselections' : ''}} ">
-
-
-
+            <div class="col-md-3 column {{ ($response>0) ? 'disableselections' : ''}} ">
             <ul class="column">
-
-                <li class="field-type intro {{ ($welcome!='') ? 'disableselections' : ''}}" rel="textarea" id="welcome_txt">{{HTML::image('images/welcome-icon.png')}} Welcome Screen</li>
-
-
-
+                <li class="field-type intro {{ ($welcome!='') ? 'disableselections' : ''}}" rel="textarea" id="welcome_txt"><img src="{{ asset('images/welcome-icon.png') }}" alt="">
+                    Welcome Screen</li>
             </ul>
 
             <ul class="column" id="drag-input-fields">
-
-                <!-- <li class="field-type fields" rel="dimension">Preamble</li> -->
-
-                <!-- <li class="field-type fields" rel="text">Heading Texts</li> -->
-
-                <li class="field-type fields" rel="radio"> {{HTML::image('images/single-choice-icon.png')}} Single Choice</li>
-
-                <li class="field-type fields" rel="checkbox"> {{HTML::image('images/multiple-choice-icon.png')}} Multiple Choice</li>
-
-                <li class="field-type fields" rel="dropdown"> {{HTML::image('images/dropdown-icon.png')}} Dropdown</li>
-
-                <li class="field-type fields" rel="text"> {{HTML::image('images/short-text-icon.png')}} Single Line Text </li>
-
-                <li class="field-type fields" rel="textarea"> {{HTML::image('images/long-text-icon.png')}} Multi Line Text </li>
-
-                <li class="field-type fields" rel="grid">{{HTML::image('images/grid-icon.png')}} Grid Questions</li>
-
-
-
+                <li class="field-type fields" rel="radio">
+                    <img src="{{ asset('images/single-choice-icon.png') }}" alt=""> Single Choice
+                </li>
+                <li class="field-type fields" rel="checkbox">
+                    <img src="{{ asset('images/multiple-choice-icon.png') }}" alt=""> Multiple Choice
+                </li>
+                <li class="field-type fields" rel="dropdown">
+                    <img src="{{ asset('images/dropdown-icon.png') }}" alt=""> Dropdown
+                </li>
+                <li class="field-type fields" rel="text">
+                    <img src="{{ asset('images/short-text-icon.png') }}" alt=""> Single Line Text
+                </li>
+                <li class="field-type fields" rel="textarea">
+                    <img src="{{ asset('images/long-text-icon.png') }}" alt=""> Multi Line Text
+                </li>
+                <li class="field-type fields" rel="grid">
+                    <img src="{{ asset('images/grid-icon.png') }}" alt=""> Grid Questions
+                </li>
             </ul>
+
 
              <ul class="column">
-
                 <li class="field-type question-import" rel="question-import" id="question-import">Question Import</li>
-
-
-
             </ul>
-<!--
- <ul class="column">
-
-                <li class="field-type question-grouping" rel="question-grouping" id="question-grouping">Question Grouping</li>
-
-
-
-            </ul>
--->
-
-
             <ul class="column">
-
-               <li class="field-type outro {{ ($thank_u!='') ? 'disableselections' : ''}}" rel="textarea" id="thankyou_txt"> {{HTML::image('images/thanks-icon.png')}} Thank you Screen</li>
-
+               <li class="field-type outro {{ ($thank_u!='') ? 'disableselections' : ''}}" rel="textarea" id="thankyou_txt"> <img src="{{ asset('images/thanks-icon.png') }}" alt="">                Thank you Screen</li>
             </ul>
-
-
-
 		    </div>
-
-
-
             <div class="col-md-9 question-drop-drag" id="question-drop-drag">
 
             <?php
@@ -159,123 +108,56 @@
             }
 
             ?>
+            <?php
 
+                    $check_exists_question=DB::table('user_survey_respondent')
+                                        ->whereNotNull('last_submitted_date')
+                                        ->where('survey_id',$survey_id)
+                                        ->count();
 
-
-<?php
-
-        $check_exists_question=DB::table('user_survey_respondent')
-                               ->whereNotNull('last_submitted_date')
-                               ->where('survey_id',$survey_id)
-                               ->count();
-
-?>
+            ?>
 
             @if(count($questions) > 0 && $check_exists_question==0)
 
             <div class="pull-right delete-button">
               <a href="javascript:void(0)" data-action="{{route('delete.questions',['survey_id'=>$survey_id])}}" class="btn btn-danger" title="Delete All Questions" id="delete-all"><i class="fa fa-trash"></i>
-              Delete All Questions
+                Delete All Questions
               </a>
-
             </div>
             @endif
 
 <br>
 <br>
-
-
-
             <ul id="intro">
+                <?php $css_welcome="inherit";?>
 
-            <?php $css_welcome="inherit";?>
-
-            @if(!empty($welcome_txt))
-
-            <?php
-
-            list($qtnid) = array_keys($welcome_txt);
-
-            $welcome_text=strip_tags($welcome_txt[$qtnid]);
-
-            if(strlen(trim($welcome_text))>110)
-
-            {
-
-                 $welcome_text=substr($welcome_text, 0,110)."...";
-
-            }
-
-            $css_welcome="none";
-
-
-
-            ?>
-
-            <li rel="{{$qtnid}}" class="response-area  intro" rel="{{$qtnid}}" ><div class="response-label">{{$welcome_text}}</div><div class="response-action"><a class="delete-question pull-right" href="#" title="Delete" style="display: none;"><span class="glyphicon glyphicon-trash"></span></a></div></li>
-
-
-
-
-
-
-
-            @endif
-
-            <li class="drop-space-intro" style="display:{{$css_welcome}}">Add Welcome Text Here & Write Welcome Message</li>
-
+                @if(!empty($welcome_txt))
+                    <?php
+                        list($qtnid) = array_keys($welcome_txt);
+                        $welcome_text=strip_tags($welcome_txt[$qtnid]);
+                        if(strlen(trim($welcome_text))>110)
+                        {
+                            $welcome_text=substr($welcome_text, 0,110)."...";
+                        }
+                        $css_welcome="none";
+                    ?>
+                    <li rel="{{$qtnid}}" class="response-area  intro" rel="{{$qtnid}}" ><div class="response-label">{{$welcome_text}}</div><div class="response-action"><a class="delete-question pull-right" href="#" title="Delete" style="display: none;"><span class="glyphicon glyphicon-trash"></span></a></div></li>
+                @endif
+                <li class="drop-space-intro" style="display:{{$css_welcome}}">Add Welcome Text Here & Write Welcome Message</li>
             </ul>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <ul id="fields">
-
             <li class="drop-space-questions">Add Questions Here</li>
-
-
-
             <?php $qcnt=1;  $temp="";?>
 
             @if(!empty($question_txt))
 
             @foreach($question_txt as $qtnid=>$qtnvalue)
-
             <?php
-
-
-
-            $exp=explode('|',$qtnvalue);
-
-            $question_nature_format=$exp[0];
-
-            $qtn_txt=$exp[1];
-
-            $question_dimension=$exp[2];
-
-
-
+                $exp=explode('|',$qtnvalue);
+                $question_nature_format=$exp[0];
+                $qtn_txt=$exp[1];
+                $question_dimension=$exp[2];
             ?>
 
 
@@ -316,24 +198,25 @@
             <div class="response-order-list">{{$qcnt}}
 
 
-@if($question_nature_format=='radio')
-	{{HTML::image('images/single-choice-icon.png')}}
+        @if($question_nature_format=='radio')
+            <img src="{{ asset('images/single-choice-icon.png') }}" alt="Single Choice">
 
-@elseif ($question_nature_format=='checkbox')
-	{{HTML::image('images/multiple-choice-icon.png')}}
+        @elseif ($question_nature_format=='checkbox')
+            <img src="{{ asset('images/multiple-choice-icon.png') }}" alt="Multiple Choice">
 
-@elseif ($question_nature_format=='dropdown')
-	{{HTML::image('images/dropdown-icon.png')}}
+        @elseif ($question_nature_format=='dropdown')
+            <img src="{{ asset('images/dropdown-icon.png') }}" alt="Dropdown">
 
-@elseif ($question_nature_format=='text')
-	{{HTML::image('images/short-text-icon.png')}}
+        @elseif ($question_nature_format=='text')
+            <img src="{{ asset('images/short-text-icon.png') }}" alt="Single Line Text">
 
-@elseif ($question_nature_format=='textarea')
-	{{HTML::image('images/long-text-icon.png') }}
+        @elseif ($question_nature_format=='textarea')
+            <img src="{{ asset('images/long-text-icon.png') }}" alt="Multi Line Text">
 
-@elseif  ($question_nature_format=='grid')
-	{{HTML::image('images/grid-icon.png')}}
-@endif
+        @elseif  ($question_nature_format=='grid')
+            <img src="{{ asset('images/grid-icon.png') }}" alt="Grid Questions">
+        @endif
+
 
 </div><div class="response-label-db">{{$qtn_txt}}</div>
 <div class="question-dimension-section" >{!!$qdimension!!}</div>
@@ -523,26 +406,11 @@
 
                                 <button type="button" id="questionimport-submit-btn" class="btn btn-success" >Save</button>
 
-
-
-                                {{HTML::Image("images/img_load.gif","ajax_load",["class"=>"load-ajximage"])}}
-
-
+                                <img src="{{ asset('images/img_load.gif') }}" alt="ajax_load" class="load-ajximage">
 
                                 </div>
 
-
-
-
-
-
-
                               </div>
-
-
-
-
-
 
 
                             </div>
@@ -733,53 +601,17 @@
 
  });
 
-
-
-
-
-
-
-
-
-
-
-
-
   });
 
 </script>
 
-
-
-
-
-
-
-
-
 </section>
 
+<script src="{{ asset('script/bootstrap-filestyle.js') }}"></script>
+<script src="{{ asset('script/sweetalert.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/sweetalert.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin-addquestion.css') }}">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-{!! HTML::script('script/bootstrap-filestyle.js')!!}
-
-{{ HTML::script('script/sweetalert.min.js') }}
-
-{{ HTML::style('css/sweetalert.css') }}
-
-{{ HTML::style('css/admin-addquestion.css') }}
 
 
 

@@ -2,8 +2,9 @@
 @section('content')
     <!-- <form class="container"> -->
 
-    {{ Form::model($data, ['method' => 'PATCH','route' => ['copy-survey', 'survey_id=' . $data->id],'role' => 'form','class' => 'form-horizontal container','files' => 'true','id' => 'add-survey']) }}
-
+        <form method="POST" action="{{ route('copy-survey', 'survey_id=' . $data->id) }}" role="form" class="form-horizontal container" enctype="multipart/form-data" id="add-survey">
+            @method('PATCH')
+            @csrf
     <div class="row setup-content" id="step-1">
         <div class="col-xs-12">
             <div class="form-wrapper">
@@ -34,18 +35,21 @@
 
                                 <div class="form-group">
 
-                                    {{ Form::label('title', 'Survey Name', ['class' => 'col-sm-2 ']) }}
+                                    <label for="title" class="col-sm-2">Survey Name</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('title', null, ['class' => 'form-control', 'required']) }}
+                                        <input type="text" name="title" id="title" class="form-control" required oninput="sanitizeInput(this)" value="{{ $data->title }}">
                                     </div>
+
 
                                 </div>
                                 <div class="form-group">
 
-                                    {{ Form::label('cname', 'Client Name', ['class' => 'col-sm-2']) }}
+                                    <label for="cname" class="col-sm-2">Client Name</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('client_name', null, ['class' => 'form-control','data-toggle' => 'tooltip','data-placement' => 'bottom','title' => 'Client Name']) }}
+                                        <input type="text" name="client_name" id="cname" class="form-control" data-toggle="tooltip" data-placement="bottom"
+                                            title="Client Name" oninput="sanitizeInput(this)" value="{{ $data->client_name }}">
                                     </div>
+
 
                                 </div>
                                 <div class="form-group">
@@ -55,52 +59,55 @@
                                     $end_date = date('d/m/Y h:i A', strtotime($data->end_date));
 
                                     ?>
-                                    {{ Form::label('sdate', 'Start Date', ['class' => 'col-sm-2 ']) }}
-                                    <div class="col-sm-10">
-                                        {{ Form::text('start_date', $start_date, ['class' => 'form-control','required','id' => 'startdatetime','readonly' => true]) }}
-                                    </div>
+                                   <label for="sdate" class="col-sm-2">Start Date</label>
+                                   <div class="col-sm-10">
+                                       <input type="text" name="start_date" id="sdate" value="{{ $start_date }}"
+                                              class="form-control" required readonly >
+                                   </div>
 
                                 </div>
 
                                 <div class="form-group">
-
-                                    {{ Form::label('edate', 'End Date', ['class' => 'col-sm-2 ']) }}
+                                    <label for="edate" class="col-sm-2">End Date</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('end_date', $end_date, ['class' => 'form-control','required','id' => 'enddatetime','readonly' => true]) }}
+                                        <input type="text" name="end_date" id="edate" value="{{ $end_date }}"
+                                               class="form-control" required readonly>
                                     </div>
-
                                 </div>
+
                                 <div class="form-group">
-
-                                    {{ Form::label('femail', 'From Email', ['class' => 'col-sm-2','data-toggle' => 'tooltip','data-placement' => 'bottom','title' => 'From Email']) }}
+                                    <label for="femail" class="col-sm-2" data-toggle="tooltip" data-placement="bottom" title="From Email">From Email</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('send_email_from', null, ['class' => 'form-control']) }}
+                                        <input type="text" name="send_email_from" id="femail" class="form-control" value="{{ $data->send_email_from }}">
                                     </div>
-
                                 </div>
+
                                 <div class="form-group">
-                                    {{ Form::label('femail', 'Sender Name', ['class' => 'col-sm-2']) }}
+                                    <label for="sender_name" class="col-sm-2">Sender Name</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('sender_name', null, ['class' => 'form-control','data-toggle' => 'tooltip','data-placement' => 'bottom','title' => 'Sender Name']) }}
+                                        <input type="text" name="sender_name" id="sender_name" class="form-control" data-toggle="tooltip" data-placement="bottom"
+                                               title="Sender Name" oninput="sanitizeInput(this)" value="{{ $data->sender_name }}">
                                     </div>
                                 </div>
+
 
 
                                 @include('admin.survey.images')
 
                                 <div class="form-group">
-                                    {{ Form::label('header_text', 'Header Text', ['class' => 'col-sm-2 ']) }}
+                                    <label for="header_text" class="col-sm-2">Header Text</label>
                                     <div class="col-sm-10">
-                                        {{ Form::textarea('header_text', null, ['class' => 'form-control', 'id' => 'header_text']) }}
+                                        <textarea name="header_text" id="header_text" class="form-control">{{ $data->header_text }}</textarea>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    {{ Form::label('footer_text', 'Footer Text', ['class' => 'col-sm-2 ']) }}
+                                    <label for="footer_text" class="col-sm-2">Footer Text</label>
                                     <div class="col-sm-10">
-                                        {{ Form::textarea('footer_text', null, ['class' => 'form-control', 'id' => 'footer_text']) }}
+                                        <textarea name="footer_text" id="footer_text" class="form-control">{{ $data->footer_text }}</textarea>
                                     </div>
                                 </div>
+
 
                                 <div class="form-group">
                                     <div class="col-sm-10 col-sm-offset-2">
@@ -109,17 +116,19 @@
                                 </div>
 
                                 <div class="form-group">
-                                    {{ Form::label('surl', 'Survey URL', ['class' => 'col-sm-2 ']) }}
+                                    <label for="surl" class="col-sm-2">Survey URL</label>
                                     <div class="col-sm-10">
-                                        {{ Form::text('url', '', ['id' => 'chatinput', 'class' => 'form-control url']) }}
+                                        <input type="text" name="url" id="chatinput" class="form-control url" value="{{ $data->url }}">
                                     </div>
                                 </div>
 
 
 
+
                                 <!-- Shuffle QUestion -->
                                 <div class="form-group">
-                                    {{ Form::label('shuffle_questions', 'Shuffle Question', ['class' => 'col-sm-2 ']) }}
+                                    <label for="shuffle_questions" class="col-sm-2">Shuffle Question</label>
+
 
                                     <div class="col-sm-10">
                                         @if ($data->shuffle_questions == 1)
@@ -145,11 +154,11 @@
 
                                 <div class="form-group">
 
-                                    {{ Form::label('rater', 'Rater / Respondent', ['class' => 'col-sm-2 ']) }}
+                                    <label for="rater" class="col-sm-2">Rater / Respondent</label>
+
                                     <div class="col-sm-10">
-                                        <!--{{ Form::text('rater', null, ['class' => 'form-control']) }}-->
-                                        {{ Form::text('rater', null, ['placeholder' => 'Rater / Respondent','class' => 'raters form-control','id' => 'rater']) }}
-                                        <!-- {{ Form::hidden('rater_name', null, ['placeholder' => 'Rater / Respondent','class' => 'form-control','id' => 'rater']) }} -->
+                                        <input type="text" name="rater" id="rater" class="raters form-control" placeholder="Rater / Respondent" oninput="sanitizeInput(this)">
+
                                         <div id="chat-screen" class="well">
                                             <ul class="chat-screen list-unstyled">
                                                 @foreach ($raters as $rater)
@@ -173,35 +182,23 @@
 
 
                                 <div class="form-group">
-                                    <?php $dimension_hide = $data->dimension_hide;
-                                    ?>
-
+                                    <?php $dimension_hide = $data->dimension_hide; ?>
                                     <div class="col-sm-10 col-sm-offset-2 text-left">
-                                        @if ($dimension_hide)
-                                            {{ Form::checkbox('dimension_hide', 1, null, ['id' => 'dimension_hide']) }}
-                                        @else
-                                            {{ Form::checkbox('dimension_hide', 1, null, ['id' => 'dimension_hide']) }}
-                                        @endif
-                                        {{ Form::label('dimension_hide', 'Dimension Hide ', ['id' => 'dimension_hide']) }}
+                                        <input type="checkbox" name="dimension_hide" id="dimension_hide" value="1" {{ $dimension_hide ? 'checked' : '' }}>
+                                        <label for="dimension_hide">Dimension Hide</label>
                                     </div>
-
                                 </div>
+
 
 
                                 <div class="form-group">
-
-                                    <?php $checkbox_value = $data->participant_rater_manage;
-                                    ?>
+                                    <?php $checkbox_value = $data->participant_rater_manage; ?>
                                     <div class="col-sm-10 col-sm-offset-2 text-left">
-                                        @if ($checkbox_value)
-                                            {{ Form::checkbox('participant_rater_manage', 1, null, ['id' => 'rater_chk']) }}
-                                        @else
-                                            {{ Form::checkbox('participant_rater_manage', 0, null, ['id' => 'rater_chk']) }}
-                                        @endif
-                                        {{ Form::label('rater_chk', 'Participants can Manage Rater/Respondent ? ', ['id' => 'rater_chk']) }}
+                                        <input type="checkbox" name="participant_rater_manage" id="rater_chk" value="1" {{ $checkbox_value ? 'checked' : '' }}>
+                                        <label for="rater_chk">Participants can Manage Rater/Respondent ?</label>
                                     </div>
-
                                 </div>
+
 
 
                                 <div class="form-group">
@@ -212,7 +209,7 @@
                                             Next</button>
                                     </div>
                                 </div>
-                                {{ Form::close() }}
+
 
                             </div>
                         </div>
@@ -228,17 +225,18 @@
 
     <!-- </form> -->
 
-    {{ Form::close() }}
+        </form>
 
 
-    {!! HTML::script('script/bootstrap-filestyle.js') !!}
-    {!! HTML::script('script/moment.js') !!}
-    {!! HTML::script('script/bootstrap-datetimepicker.js') !!}
-    {!! HTML::style('css/bootstrap-datetimepicker.min.css') !!}
+        <script src="{{ asset('script/bootstrap-filestyle.js') }}"></script>
+        <script src="{{ asset('script/moment.js') }}"></script>
+        <script src="{{ asset('script/bootstrap-datetimepicker.js') }}"></script>
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
 
-    {{ HTML::style('css/bootstrap3-wysihtml5.min.css') }}
+        <link rel="stylesheet" href="{{ asset('css/bootstrap3-wysihtml5.min.css') }}">
 
-    {{ HTML::script('script/bootstrap3-wysihtml5.js') }}
+        <script src="{{ asset('script/bootstrap3-wysihtml5.js') }}"></script>
+
     <style type="text/css">
         .img-cancel {
             display: none;

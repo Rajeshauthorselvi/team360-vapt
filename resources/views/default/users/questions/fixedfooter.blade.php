@@ -20,8 +20,8 @@
 @if(count($questions)>0)
 <div class="action-panel">
 <div class="actions pull-right">
- {{Form::button('Save',['class'=>'btn btn-primary ','id'=>'form-save'])}}
-{{Form::button('Submit',['class'=>'btn btn-primary ','id'=>'form-submit'])}}
+<button type="button" class="btn btn-primary" id="form-save">Save</button>
+<button type="button" class="btn btn-primary" id="form-submit">Submit</button>
 <button class="btn btn-primary " id="prev-btn" value="1"><span class="glyphicon glyphicon-chevron-up" ></span></button>
 <button class="btn btn-primary " id="next-btn" value="2"><span class="glyphicon glyphicon-chevron-down"></span></button>
 </div>

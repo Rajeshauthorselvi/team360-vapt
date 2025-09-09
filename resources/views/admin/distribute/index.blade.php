@@ -2,585 +2,652 @@
 @section('content')
 
 <div class="container">
- <div class="row setup-content" id="step-6">
+    <div class="row setup-content" id="step-6">
 
         <div class="col-xs-12">
-        <div class="form-wrapper">
-        <div class="form-steps-wizard step6"> </div>
+            <div class="form-wrapper">
+                <div class="form-steps-wizard step6"> </div>
 
 
-            <div class="col-md-12 well">
-                <h3 class="need-margin-bottom-forstrip text-center">Send Email</h3>
+                <div class="col-md-12 well">
+                    <h3 class="need-margin-bottom-forstrip text-center">Send Email</h3>
 
 
-<!-- <form> -->
+                    <!-- <form> -->
 
-                           @if ($errors->any())
-                                  <div class="alert alert-danger fade in">
+                    @if ($errors->any())
+                    <div class="alert alert-danger fade in">
 
-                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+
+                        <strong>Error!</strong> A problem has been occurred while submitting form.<br>
+                        <ul>
+                            {!! implode('', $errors->all('<li class="text-danger">:message</li>')) !!}
+                        </ul>
+                    </div>
+                    @endif
 
-                                <strong>Error!</strong> A problem has been occurred while submitting form.<br>
-                                <ul>
-                                {!! implode('', $errors->all('<li class="text-danger">:message</li>')) !!}
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#notification">Notification</a></li>
+                        <li><a data-toggle="tab" href="#remainder">Reminder</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <?php
+                            $if_manage=DB::table('surverys')->where('id',$survey_id)->value('participant_rater_manage');
+                            $if_admin=DB::table('surverys')->where('id',$survey_id)->value('admin_survey_flag');
+                        ?>
 
-                                 </ul> </div>
-                                @endif
-
- <ul class="nav nav-tabs">
-	<li class="active"><a data-toggle="tab" href="#notification">Notification</a></li>
-	<li><a data-toggle="tab" href="#remainder">Reminder</a></li>
- </ul>
-
-<div class="tab-content">
-<?php $if_manage=DB::table('surverys')->where('id',$survey_id)->value('participant_rater_manage');
-$if_admin=DB::table('surverys')->where('id',$survey_id)->value('admin_survey_flag');
- ?>
-
-<div id="notification" class="tab-pane fade in active">
-<input type="hidden" value="participant" name="participant">
-<input type="radio" name="users" value="notification-participant" id="pa-participant"/><label for="pa-participant">Participant</label>
-@if(($if_manage!='1') || ($if_admin=='1'))
-<input type="radio" name="users" value="notification-respondent" id="pa-respondent" /><label for="pa-respondent">Respondent</label>
-@endif
-</div>
-<div id="remainder" class="tab-pane fade in">
-<input type="hidden" value="remainder" name="participant">
-<input type="radio" name="re-user"  value="reminder-participant" id="re-participant"/> <label for="re-participant">Participant</label>
-@if(($if_manage!='1') || ($if_admin=='1'))
-<input type="radio" name="re-user" value="reminder-respondent" id="re-respondent" /><label for="re-respondent">Respondent</label>
-@endif
-</div>
-
-</div>
-
-
-
-
-
-<br/>
-    <div id="add-notification-participant" class="desc" >
-
-    {!! Form::open(array('route' => 'distribute.store','method'=>'POST','id'=>'distribute-participants','class'=>'form-horizontal','files'=>'true')) !!}
-
-
-
-    {!! Form::hidden('send_email', 'notification-participant') !!}
-
-    <div class="form-group">
-        <div class="col-sm-12">
-        {!! Form::text('sender_name', $from_name,['class' => 'form-control','placeholder' => 'From Name']) !!}
-    </div></div>
-
-
-
-
-  <?php $send_email_from=(isset($from_email)) ? $from_email : null; ?>
-  <div class="form-group">
-        <div class="col-sm-12">
-        {!! Form::email('from_email_participant', $send_email_from,['class' => 'form-control','placeholder' => 'From Email']) !!}
-    </div></div>
-
-
-
-    <div class="form-group">
-        <div class="col-sm-12">
-  {!! Form::email('cc_participant', null,['class' => 'form-control','placeholder' => 'CC']) !!}
-  </div></div>
-
- <div class="form-group">
-        <div class="col-sm-12">
-  {!! Form::text('copy_email_participant', null,['class' => 'form-control','placeholder' => 'BCC']) !!}
-  </div></div>
-  <div class="form-group">
-    <div class="col-sm-12">
-{!! Form::text('replay_to', null,['class' => 'form-control','placeholder' => 'Replay To']) !!}
-</div></div>
-  <div class="form-group">
-        <div class="col-sm-12">
-        <div class="participant-wraper">
-        <?php $count=1;$i=1;?>
-
-@foreach($participants as $participant)
-@if($count==1)
-<div class="split-12">
-<label><input type="checkbox" checked="checked" id="select_all_case1"/> Select all</label>
-</div>
-@endif
-<div class="split-4">
-{{Form::checkbox('bcc_participant[]',$participant->email,1,['id'=>'chk'.$count,'class'=>'case1'])}}
-<label for="{{'chk'.$count}}">{{$participant->fname .'  '.$participant->lname}}({{$participant->email}})</label>
-</div>
-@if($i==250)
-
-
-<div class="col-md-9 ">
-<hr>
-</div>
-<?php $i=0; ?>
-@endif
-<?php $count++;$i++?>
-@endforeach
-
- </div></div></div>
-
-    <div class="form-group">
-        <div class="col-sm-12">
-          <?php
-    if (isset($email_templates['notification-participant']['subject'])) {
-      $subject=$email_templates['notification-participant']['subject'];
-    }
-    else{
-      $subject=null;
-    }
-
-    ?>
-        {!! Form::text('subject_participant', $subject,['class' => 'form-control','placeholder' => 'Subject','id'=>'subject']) !!}
-    </div></div>
-
-   <div class="form-group">
-        <div class="col-sm-12">
-        <div class="lnbrd">
-          <?php
-    if (isset($email_templates['notification-participant']['content'])) {
-      $template=$email_templates['notification-participant']['content'];
-    }
-    else{
-      $template='[fname][lname][Surveys list][Login Details]';
-    }
-
-    ?>
-       {!! Form::textarea('message_body_participant',$template, array('id'  => 'message_body_participant','class' => 'textarea form-control')) !!}
-       </div>
-
-    </div></div>
-
-
-
-	<div class="form-group">
-	<div class="col-sm-12">
-	<div class="lnbrd">
-	<input type="checkbox" name="attachment" id="attachment"> <label for="attachment">Attach File</label>
-	</div>
-	</div>
-	</div>
-
-	<div id="attach">
-	<div class="form-group">
-	<div class="col-sm-12">
-	<div class="lnbrd">
-		<input type="file" class="filestyle" name="attachment_doc" accept=".pdf,.doc,.docx" data-buttonName="btn-primary">
-	</div>
-	</div>
-	</div>
-	</div>
-
-
-
-     <small><strong>Note :[fname]</strong> use this shortcode to yield first name in the section. <br/>
-<span style="padding-left:3em"><strong>[lname]</strong> use this shortcode to yield last name in the section </span><br/>
-<span style="padding-left:3em"><strong>[Surveys list]</strong> use this shortcode to yield survey information in the section </span><br/>
-<span style="padding-left:3em"><strong>[Login Details]</strong> use this shortcode to yield login information in the section</span></small>
-   <br>
-    <?php   $actionurl=URL::route('addusers.show',$survey_id); ?>
-     <div class="form-group" style="margin-top: 10px;">
-        <div class="col-sm-12">
-    {!! Form::hidden('survey_id', $survey_id) !!}
-
-
-                <a href="{{$actionurl}}" class="btn btn-danger btn-md">Cancel</a>
-  {!! Form::submit('Send Email', array('class' => 'btn btn-success')) !!}
-  </div>
-  </div>
-
-  {!! Form::close() !!}
-
-   </div>
-
-<!--   -->
-
-
- <div id="add-notification-respondent" class="desc" style="display: none;" >
-
-    {!! Form::open(array('route' => 'distribute.store','method'=>'POST','id'=>'distribute-respondent','class'=>'form-horizontal','files'=>'true')) !!}
-
-
-
-    {!! Form::hidden('send_email', 'notification-respondent') !!}
-
-
-
-
-
-
-  <?php $send_email_from=(isset($from_email)) ? $from_email : null; ?>
-  <div class="form-group">
-        <div class="col-sm-12">
-        {!! Form::email('from_email_respondent', $send_email_from,['class' => 'form-control','placeholder' => 'From Email']) !!}
-    </div></div>
-
-
-
-    <div class="form-group">
-        <div class="col-sm-12">
-  {!! Form::email('cc_respondent', null,['class' => 'form-control','placeholder' => 'CC']) !!}
-  </div></div>
-
- <div class="form-group">
-        <div class="col-sm-12">
-  {!! Form::text('copy_email_respondent', null,['class' => 'form-control','placeholder' => 'BCC']) !!}
-  </div></div>
-  <div class="form-group">
-    <div class="col-sm-12">
-{!! Form::text('replay_to', null,['class' => 'form-control','placeholder' => 'Replay To']) !!}
-</div></div>
-  <div class="form-group">
-        <div class="col-sm-12">
-        <div class="participant-wraper">
-        <?php $count=1; $i=1;?>
-        @foreach($respondents as $respondent)
-        @if($count==1)
-        <div class="split-12">
-        <label><input type="checkbox" checked="checked" id="select_all_case2"/> Select all</label>
+                        <div id="notification" class="tab-pane fade in active">
+                            <input type="hidden" value="participant" name="participant">
+                            <input type="radio" name="users" value="notification-participant"
+                                id="pa-participant" /><label for="pa-participant">Participant</label>
+                            @if(($if_manage!='1') || ($if_admin=='1'))
+                            <input type="radio" name="users" value="notification-respondent" id="pa-respondent" /><label
+                                for="pa-respondent">Respondent</label>
+                            @endif
+                        </div>
+                        <div id="remainder" class="tab-pane fade in">
+                            <input type="hidden" value="remainder" name="participant">
+                            <input type="radio" name="re-user" value="reminder-participant" id="re-participant" />
+                            <label for="re-participant">Participant</label>
+                            @if(($if_manage!='1') || ($if_admin=='1'))
+                            <input type="radio" name="re-user" value="reminder-respondent" id="re-respondent" /><label
+                                for="re-respondent">Respondent</label>
+                            @endif
+                        </div>
+
+                    </div>
+
+                    <br />
+                    <div id="add-notification-participant" class="desc">
+
+                        <form method="POST" action="{{ route('distribute.store') }}" id="distribute-participants" class="form-horizontal" enctype="multipart/form-data">
+                            @csrf
+
+                        <input type="hidden" name="send_email" value="notification-participant">
+
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" name="sender_name" value="{{ $from_name }}" class="form-control" placeholder="From Name" oninput="sanitizeInput(this)">
+                            </div>
+                        </div>
+
+
+
+
+                        <?php $send_email_from=(isset($from_email)) ? $from_email : null; ?>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="email" name="from_email_participant" value="{{ $send_email_from }}" class="form-control" placeholder="From Email">
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="email" name="cc_participant" value="" class="form-control" placeholder="CC">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" name="copy_email_participant" value="" class="form-control" placeholder="BCC">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" name="replay_to" value="" class="form-control" placeholder="Replay To">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="participant-wraper">
+                                    <?php $count=1;$i=1;?>
+
+                                    @foreach($participants as $participant)
+                                    @if($count==1)
+                                    <div class="split-12">
+                                        <label><input type="checkbox" checked="checked" id="select_all_case1" /> Select
+                                            all</label>
+                                    </div>
+                                    @endif
+                                    <div class="split-4">
+                                        <input type="checkbox" name="bcc_participant[]" value="{{ $participant->email }}" id="chk{{ $count }}" class="case1" checked>
+
+                                        <label for="{{'chk'.$count}}">{{$participant->fname .' '.$participant->lname}}({{$participant->email}})</label>
+                                    </div>
+                                    @if($i==250)
+
+
+                                    <div class="col-md-9 ">
+                                        <hr>
+                                    </div>
+                                    <?php $i=0; ?>
+                                    @endif
+                                    <?php $count++;$i++?>
+                                    @endforeach
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <?php
+                                    if (isset($email_templates['notification-participant']['subject'])) {
+                                        $subject=$email_templates['notification-participant']['subject'];
+                                    }
+                                    else{
+                                        $subject=null;
+                                    }
+
+                                ?>
+                                <input type="text" name="subject_participant" value="{{ $subject }}" class="form-control" placeholder="Subject" id="subject">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="lnbrd">
+                                    <?php
+                                        if (isset($email_templates['notification-participant']['content'])) {
+                                        $template=$email_templates['notification-participant']['content'];
+                                        }
+                                        else{
+                                        $template='[fname][lname][Surveys list][Login Details]';
+                                        }
+
+                                    ?>
+                                    <textarea name="message_body_participant" id="message_body_participant" class="textarea form-control">{{ $template }}</textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="lnbrd">
+                                    <input type="checkbox" name="attachment" id="attachment"> <label
+                                        for="attachment">Attach File</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="attach">
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="lnbrd">
+                                        <input type="file" class="filestyle" name="attachment_doc"
+                                            accept=".pdf,.doc,.docx" data-buttonName="btn-primary">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <small><strong>Note :[fname]</strong> use this shortcode to yield first name in the section.
+                            <br />
+                            <span style="padding-left:3em"><strong>[lname]</strong> use this shortcode to yield last
+                                name in the section </span><br />
+                            <span style="padding-left:3em"><strong>[Surveys list]</strong> use this shortcode to yield
+                                survey information in the section </span><br />
+                            <span style="padding-left:3em"><strong>[Login Details]</strong> use this shortcode to yield
+                                login information in the section</span></small>
+                        <br>
+                        <?php   $actionurl=URL::route('addusers.show',$survey_id); ?>
+                        <div class="form-group" style="margin-top: 10px;">
+                            <div class="col-sm-12">
+                                <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+
+                                <a href="{{ $actionurl }}" class="btn btn-danger btn-md">Cancel</a>
+                                <button type="submit" class="btn btn-success">Send Email</button>
+                            </div>
+
+                        </div>
+
+                        </form>
+
+                    </div>
+
+                    <!--   -->
+
+
+                    <div id="add-notification-respondent" class="desc" style="display: none;">
+
+                        <form method="POST" action="{{ route('distribute.store') }}" id="distribute-respondent" class="form-horizontal" enctype="multipart/form-data">
+                            @csrf
+
+                            <input type="hidden" name="send_email" value="notification-respondent">
+
+                        <?php $send_email_from=(isset($from_email)) ? $from_email : null; ?>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="email" name="from_email_respondent" value="{{ $send_email_from }}" class="form-control" placeholder="From Email">
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="email" name="cc_respondent" value="" class="form-control" placeholder="CC">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" name="copy_email_respondent" value="" class="form-control" placeholder="BCC">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" name="replay_to" value="" class="form-control" placeholder="Replay To">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="participant-wraper">
+                                    <?php $count=1; $i=1;?>
+                                    @foreach($respondents as $respondent)
+                                    @if($count==1)
+                                    <div class="split-12">
+                                        <label><input type="checkbox" checked="checked" id="select_all_case2" /> Select
+                                            all</label>
+                                    </div>
+                                    @endif
+                                    <div class="split-4">
+                                        <input type="checkbox" name="bcc_respondent[]" value="{{ $respondent->email }}" id="chk{{ $count }}" class="case2" checked>
+                                        <label for="{{'chk'.$count}}">{{$respondent->fname.'
+                                            '.$respondent->lname}}({{$respondent->email}})</label>
+                                    </div>
+                                    @if($i==250)
+
+
+                                    <div class="col-md-9 ">
+                                        <hr>
+                                    </div>
+                                    <?php $i=0; ?>
+                                    @endif
+                                    <?php $count++;$i++?>
+
+                                    @endforeach
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <?php
+                                if (isset($email_templates['notification-respondent']['subject'])) {
+                                    $subject=$email_templates['notification-respondent']['subject'];
+                                }else{
+                                    $subject=null;
+                                }
+
+                                ?>
+                                <input type="text" name="subject_respondent" value="{{ $subject }}" class="form-control" placeholder="Subject" id="subject">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="lnbrd">
+                                    <?php
+                                        if (isset($email_templates['notification-respondent']['content'])) {
+                                            $template=$email_templates['notification-respondent']['content'];
+                                        }else{
+                                            $template='[fname][lname][Surveys list][Login Details]';
+                                        }
+
+                                    ?>
+                                    <textarea name="message_body_respondent" id="message_body_respondent" class="textarea form-control">{{ $template }}</textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="lnbrd">
+                                    <input type="checkbox" name="attachment" id="attachment_respondent"> <label
+                                        for="attachment_respondent">Attach File</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="attach_respondent">
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="lnbrd">
+                                        <input type="file" class="filestyle" name="attachment_doc"
+                                            accept=".pdf,.doc,.docx" data-buttonName="btn-primary">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <small><strong>Note :[fname]</strong> use this shortcode to yield first name in the section.
+                            <br />
+                            <span style="padding-left:3em"><strong>[lname]</strong> use this shortcode to yield last
+                                name in the section </span><br />
+                            <span style="padding-left:3em"><strong>[Surveys list]</strong> use this shortcode to yield
+                                survey information in the section </span><br />
+                            <span style="padding-left:3em"><strong>[Login Details]</strong> use this shortcode to yield
+                                login information in the section</span></small>
+                        <br>
+                        <?php   $actionurl=URL::route('addusers.show',$survey_id); ?>
+                        <div class="form-group" style="margin-top: 10px;">
+                            <div class="col-sm-12">
+                                <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+                                <a href="{{$actionurl}}" class="btn btn-danger btn-md">Cancel</a>
+                                <button type="submit" class="btn btn-success">Send Email</button>
+                            </div>
+                        </div>
+
+                        </form>
+
+                    </div>
+
+
+
+                    <!--   -->
+                    <div id="add-reminder-participant" class="desc" style="display: none;">
+                        <form method="POST" action="{{ route('distribute.store') }}" id="distribute-participants-reminder" class="form-horizontal">
+                            @csrf
+
+
+                            <input type="hidden" name="send_email" value="remainder-participant">
+
+
+
+                        <?php $send_email_from=(isset($from_email)) ? $from_email : null; ?>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="email" name="from_email_for_reminder_participant" value="{{ $send_email_from }}" class="form-control" placeholder="From Email">
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="email" name="cc_for_reminder_participant" value="" class="form-control" placeholder="CC">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" name="copy_email_for_reminder_participant" value="" class="form-control" placeholder="BCC">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" name="replay_to" value="" class="form-control" placeholder="Replay To">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="participant-wraper col-sm-offset-1">
+                                    <?php $count=1;$i=1;?>
+                                    @foreach($remind_participants as $participant)
+                                    @if($count==1)
+                                    <div class="split-12">
+                                        <label><input type="checkbox" checked="checked" id="select_all_another" />
+                                            Select all</label>
+                                    </div>
+                                    @endif
+                                    <div class="split-4">
+                                        <input type="checkbox" name="bcc_for_reminder_participant[]" value="{{ $participant->email }}" id="chkl{{ $count }}" class="case_another" checked>
+                                        <label for="{{'chkl'.$count}}">{{$participant->fname.'
+                                            '.$participant->lname}}({{$participant->email}})</label>
+                                    </div>
+                                    @if($i==250)
+                                    <div class="col-md-9 ">
+                                        <hr>
+                                    </div>
+                                    <?php $i=0; ?>
+                                    @endif
+                                    <?php $count++;$i++?>
+                                    @endforeach
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <?php
+                                    if (isset($email_templates['remainder-participant']['subject'])) {
+                                        $subject=$email_templates['remainder-participant']['subject'];
+                                    }else{
+                                        $subject='';
+                                    }
+                                ?>
+                                <input type="text" name="subject_for_reminder_participant" value="{{ $subject }}" class="form-control" placeholder="Subject" id="subject">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="lnbrd">
+                                    <?php
+                                        if (isset($email_templates['remainder-participant']['content'])) {
+                                            $template=$email_templates['remainder-participant']['content'];
+                                        }else{
+                                            $template='[fname][lname][Surveys list][Login Details]';
+                                        }
+                                    ?>
+                                    <textarea name="message_body_for_reminder_participant" id="message_body_for_reminder_participant" class="textarea form-control">{{ $template }}</textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <small><strong>Note :[fname]</strong> use this shortcode to yield first name in the section.
+                            <br />
+                            <span style="padding-left:3em"><strong>[lname]</strong> use this shortcode to yield last
+                                name in the section </span><br />
+                            <span style="padding-left:3em"><strong>[Surveys list]</strong> use this shortcode to yield
+                                survey information in the section </span><br />
+                            <span style="padding-left:3em"><strong>[Login Details]</strong> use this shortcode to yield
+                                login information in the section</span></small>
+                        <br>
+                        <div class="form-group" style="margin-top: 10px;">
+                            <div class="col-sm-12">
+                                <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+
+
+
+                                <a href="{{$actionurl}}" class="btn btn-danger btn-md">Cancel</a>
+
+                                <button type="submit" class="btn btn-success">Send Email</button>
+
+                            </div>
+                        </div>
+
+                        </form>
+
+                    </div>
+
+                    <!--   -->
+
+
+
+
+                    <div id="add-reminder-respondent" class="desc" style="display: none;">
+                        <form method="POST" action="{{ route('distribute.store') }}" id="distribute-respondent-reminder" class="form-horizontal">
+                            @csrf
+
+
+                        <input type="hidden" name="send_email" value="remainder-respondent">
+
+
+                        <?php $send_email_from=(isset($from_email)) ? $from_email : null; ?>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="email" name="from_email_for_reminder_respondent" value="{{ $send_email_from }}" class="form-control" placeholder="From Email">
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="email" name="cc_for_reminder_respondent" value="" class="form-control" placeholder="CC">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" name="copy_email_for_reminder_respondent" value="" class="form-control" placeholder="BCC">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" name="replay_to" value="" class="form-control" placeholder="Replay To">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="participant-wraper col-sm-offset-1">
+                                    <?php $count=1; $i=1;?>
+                                    @foreach($remind_respondents as $participant)
+                                    @if($count==1)
+                                    <div class="split-12">
+                                        <label><input type="checkbox" checked="checked" id="select_all_another_case2" />
+                                            Select all</label>
+                                    </div>
+                                    @endif
+                                    <div class="split-4">
+                                        <input type="checkbox" name="bcc_for_reminder_respondent[]" value="{{ $participant->email }}" id="chkl{{ $count }}" class="case_another_2" checked>
+                                        <label for="{{'chkl'.$count}}">{{$participant->fname.'
+                                            '.$participant->lname}}({{$participant->email}})</label>
+                                    </div>
+                                    @if($i==250)
+                                    <div class="col-md-9 ">
+                                        <hr>
+                                    </div>
+                                    <?php $i=0; ?>
+                                    @endif
+                                    <?php $count++;$i++?>
+                                    @endforeach
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <?php
+                            if (isset($email_templates['remainder-respondent']['subject'])) {
+                                $subject=$email_templates['remainder-respondent']['subject'];
+                            }else{
+                                $subject=null;
+                            }
+
+                        ?>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" name="subject_for_reminder_respondent" value="{{ $subject }}" class="form-control" placeholder="Subject" id="subject">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="lnbrd">
+                                    <?php
+                                    if (isset($email_templates['remainder-respondent']['content'])) {
+                                        $template=$email_templates['remainder-respondent']['content'];
+                                    }else{
+                                        $template='[fname][lname][Surveys list][Login Details]';
+                                    }
+
+                                    ?>
+                                   <textarea name="message_body_for_reminder_respondent" id="message_body_for_reminder_respondent" class="textarea form-control">{{ $template }}</textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <small><strong>Note :[fname]</strong> use this shortcode to yield first name in the section.
+                            <br />
+                            <span style="padding-left:3em"><strong>[lname]</strong> use this shortcode to yield last
+                                name in the section </span><br />
+                            <span style="padding-left:3em"><strong>[Surveys list]</strong> use this shortcode to yield
+                                survey information in the section </span><br />
+                            <span style="padding-left:3em"><strong>[Login Details]</strong> use this shortcode to yield
+                                login information in the section</span></small>
+                        <br>
+                        <div class="form-group" style="margin-top: 10px;">
+                            <div class="col-sm-12">
+                                <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+
+                                <a href="{{$actionurl}}" class="btn btn-danger btn-md">Cancel</a>
+
+                                <button type="submit" class="btn btn-success">Send Email</button>
+
+                            </div>
+                        </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
         </div>
-        @endif
-        <div class="split-4">
-        {{Form::checkbox('bcc_respondent[]',$respondent->email,1,['id'=>'chk'.$count,'class'=>'case2'])}}
-        <label for="{{'chk'.$count}}">{{$respondent->fname.'  '.$respondent->lname}}({{$respondent->email}})</label>
-        </div>
-      @if($i==250)
-
-
-<div class="col-md-9 ">
-<hr>
-</div>
-<?php $i=0; ?>
-@endif
-<?php $count++;$i++?>
-
-         @endforeach
-
-     </div></div></div>
-
-
-    <div class="form-group">
-        <div class="col-sm-12">
-   <?php
-    if (isset($email_templates['notification-respondent']['subject'])) {
-      $subject=$email_templates['notification-respondent']['subject'];
-    }else{
-      $subject=null;
-    }
-
-    ?>
-        {!! Form::text('subject_respondent', $subject,['class' => 'form-control','placeholder' => 'Subject','id'=>'subject']) !!}
-    </div></div>
-
-   <div class="form-group">
-        <div class="col-sm-12">
-        <div class="lnbrd">
-         <?php
-    if (isset($email_templates['notification-respondent']['content'])) {
-      $template=$email_templates['notification-respondent']['content'];
-    }else{
-      $template='[fname][lname][Surveys list][Login Details]';
-    }
-
-    ?>
-       {!! Form::textarea('message_body_respondent',$template, array('id'  => 'message_body_respondent','class' => 'textarea form-control')) !!}
-       </div>
-
-    </div></div>
-
-
-
-	<div class="form-group">
-	<div class="col-sm-12">
-	<div class="lnbrd">
-	<input type="checkbox" name="attachment" id="attachment_respondent"> <label for="attachment_respondent">Attach File</label>
-	</div>
-	</div>
-	</div>
-
-	<div id="attach_respondent">
-	<div class="form-group">
-	<div class="col-sm-12">
-	<div class="lnbrd">
-		<input type="file" class="filestyle" name="attachment_doc" accept=".pdf,.doc,.docx" data-buttonName="btn-primary">
-	</div>
-	</div>
-	</div>
-	</div>
-
-     <small><strong>Note :[fname]</strong> use this shortcode to yield first name in the section. <br/>
-<span style="padding-left:3em"><strong>[lname]</strong> use this shortcode to yield last name in the section </span><br/>
-<span style="padding-left:3em"><strong>[Surveys list]</strong> use this shortcode to yield survey information in the section </span><br/>
-<span style="padding-left:3em"><strong>[Login Details]</strong> use this shortcode to yield login information in the section</span></small>
-  <br>
-    <?php   $actionurl=URL::route('addusers.show',$survey_id); ?>
-     <div class="form-group" style="margin-top: 10px;">
-        <div class="col-sm-12">
-    {!! Form::hidden('survey_id', $survey_id) !!}
-
-
-                <a href="{{$actionurl}}" class="btn btn-danger btn-md">Cancel</a>
-  {!! Form::submit('Send Email', array('class' => 'btn btn-success')) !!}
-  </div>
-  </div>
-
-  {!! Form::close() !!}
-
-   </div>
-
-
-
-<!--   -->
-    <div id="add-reminder-participant" class="desc" style="display: none;">
-    {!! Form::open(array('route' => 'distribute.store','method'=>'POST','id'=>'distribute-participants-reminder','class'=>'form-horizontal')) !!}
-
-
-        {!! Form::hidden('send_email', 'remainder-participant') !!}
-
-
-  <?php $send_email_from=(isset($from_email)) ? $from_email : null; ?>
-  <div class="form-group">
-        <div class="col-sm-12">
-        {!! Form::email('from_email_for_reminder_participant', $send_email_from,['class' => 'form-control','placeholder' => 'From Email']) !!}
-    </div></div>
-
-
-
-    <div class="form-group">
-        <div class="col-sm-12">
-  {!! Form::email('cc_for_reminder_participant', null,['class' => 'form-control','placeholder' => 'CC']) !!}
-  </div></div>
-
- <div class="form-group">
-        <div class="col-sm-12">
-  {!! Form::text('copy_email_for_reminder_participant', null,['class' => 'form-control','placeholder' => 'BCC']) !!}
-  </div></div>
-  <div class="form-group">
-    <div class="col-sm-12">
-{!! Form::text('replay_to', null,['class' => 'form-control','placeholder' => 'Replay To']) !!}
-</div></div>
-  <div class="form-group">
-        <div class="col-sm-12">
-        <div class="participant-wraper col-sm-offset-1">
-        <?php $count=1;$i=1;?>
-       @foreach($remind_participants as $participant)
-        @if($count==1)
-        <div class="split-12">
-        <label><input type="checkbox" checked="checked" id="select_all_another"/> Select all</label>
-        </div>
-        @endif
-        <div class="split-4">
-        {{Form::checkbox('bcc_for_reminder_participant[]',$participant->email,1,['id'=>'chkl'.$count,'class'=>'case_another'])}}
-        <label for="{{'chkl'.$count}}">{{$participant->fname.'  '.$participant->lname}}({{$participant->email}})</label>
-        </div>
-	@if($i==250)
-	<div class="col-md-9 ">
-	<hr>
-	</div>
-	<?php $i=0; ?>
-	@endif
-	<?php $count++;$i++?>
-	@endforeach
-
-
-     </div></div></div>
-
-
-
-
-    <div class="form-group">
-        <div class="col-sm-12">
-      <?php
-    if (isset($email_templates['remainder-participant']['subject'])) {
-      $subject=$email_templates['remainder-participant']['subject'];
-    }else{
-      $subject='';
-    }
-
-    ?>
-        {!! Form::text('subject_for_reminder_participant', $subject,['class' => 'form-control','placeholder' => 'Subject','id'=>'subject']) !!}
-    </div></div>
-
-   <div class="form-group">
-        <div class="col-sm-12">
-        <div class="lnbrd">
-      <?php
-    if (isset($email_templates['remainder-participant']['content'])) {
-      $template=$email_templates['remainder-participant']['content'];
-    }else{
-      $template='[fname][lname][Surveys list][Login Details]';
-    }
-
-    ?>
-       {!! Form::textarea('message_body_for_reminder_participant',$template, array('id'  => 'message_body_for_reminder_participant','class' => 'textarea form-control')) !!}
-       </div>
-
-    </div></div>
-
-     <small><strong>Note :[fname]</strong> use this shortcode to yield first name in the section. <br/>
-<span style="padding-left:3em"><strong>[lname]</strong> use this shortcode to yield last name in the section </span><br/>
-<span style="padding-left:3em"><strong>[Surveys list]</strong> use this shortcode to yield survey information in the section </span><br/>
-<span style="padding-left:3em"><strong>[Login Details]</strong> use this shortcode to yield login information in the section</span></small>
-    <br>
-    <div class="form-group" style="margin-top: 10px;">
-        <div class="col-sm-12">
-    {!! Form::hidden('survey_id', $survey_id) !!}
-
-
-                <a href="{{$actionurl}}" class="btn btn-danger btn-md">Cancel</a>
-
-  {!! Form::submit('Send Email', array('class' => 'btn btn-success')) !!}
-  </div>
-  </div>
-
-  {!! Form::close() !!}
-
     </div>
-
-<!--   -->
-
+</div>
 
 
 
- <div id="add-reminder-respondent" class="desc" style="display: none;">
-    {!! Form::open(array('route' => 'distribute.store','method'=>'POST','id'=>'distribute-respondent-reminder','class'=>'form-horizontal')) !!}
+
+<script src="{{ asset('script/bootstrap-filestyle.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/bootstrap3-wysihtml5.min.css') }}">
+<script src="{{ asset('script/bootstrap3-wysihtml5.js') }}"></script>
 
 
-        {!! Form::hidden('send_email', 'remainder-respondent') !!}
-
-
-  <?php $send_email_from=(isset($from_email)) ? $from_email : null; ?>
-  <div class="form-group">
-        <div class="col-sm-12">
-        {!! Form::email('from_email_for_reminder_respondent', $send_email_from,['class' => 'form-control','placeholder' => 'From Email']) !!}
-    </div></div>
-
-
-
-    <div class="form-group">
-        <div class="col-sm-12">
-  {!! Form::email('cc_for_reminder_respondent', null,['class' => 'form-control','placeholder' => 'CC']) !!}
-  </div></div>
-
- <div class="form-group">
-        <div class="col-sm-12">
-  {!! Form::text('copy_email_for_reminder_respondent', null,['class' => 'form-control','placeholder' => 'BCC']) !!}
-  </div></div>
-  <div class="form-group">
-    <div class="col-sm-12">
-{!! Form::text('replay_to', null,['class' => 'form-control','placeholder' => 'Replay To']) !!}
-</div></div>
-  <div class="form-group">
-        <div class="col-sm-12">
-        <div class="participant-wraper col-sm-offset-1">
-        <?php $count=1; $i=1;?>
-       @foreach($remind_respondents as $participant)
-        @if($count==1)
-        <div class="split-12">
-        <label><input type="checkbox" checked="checked" id="select_all_another_case2"/> Select all</label>
-        </div>
-        @endif
-        <div class="split-4">
-        {{Form::checkbox('bcc_for_reminder_respondent[]',$participant->email,1,['id'=>'chkl'.$count,'class'=>'case_another_2'])}}
-        <label for="{{'chkl'.$count}}">{{$participant->fname.'  '.$participant->lname}}({{$participant->email}})</label>
-       </div>
-	@if($i==250)
-	<div class="col-md-9 ">
-	<hr>
-	</div>
-	<?php $i=0; ?>
-	@endif
-	<?php $count++;$i++?>
-	@endforeach
-
-     </div></div></div>
-
-      <?php
-    if (isset($email_templates['remainder-respondent']['subject'])) {
-      $subject=$email_templates['remainder-respondent']['subject'];
-    }else{
-      $subject=null;
+<style media="screen">
+    .nav-tabs li.bv-tab-error>a {
+        color: #555;
     }
 
-    ?>
-    <div class="form-group">
-        <div class="col-sm-12">
-        {!! Form::text('subject_for_reminder_respondent', $subject,['class' => 'form-control','placeholder' => 'Subject','id'=>'subject']) !!}
-    </div></div>
-
-   <div class="form-group">
-        <div class="col-sm-12">
-        <div class="lnbrd">
-      <?php
-    if (isset($email_templates['remainder-respondent']['content'])) {
-      $template=$email_templates['remainder-respondent']['content'];
-    }else{
-      $template='[fname][lname][Surveys list][Login Details]';
+    .nav.nav-tabs a {
+        border: 1px solid #eee;
     }
 
-    ?>
-       {!! Form::textarea('message_body_for_reminder_respondent',$template, array('id'  => 'message_body_for_reminder_respondent','class' => 'textarea form-control')) !!}
-       </div>
-
-    </div></div>
-
-     <small><strong>Note :[fname]</strong> use this shortcode to yield first name in the section. <br/>
-<span style="padding-left:3em"><strong>[lname]</strong> use this shortcode to yield last name in the section </span><br/>
-<span style="padding-left:3em"><strong>[Surveys list]</strong> use this shortcode to yield survey information in the section </span><br/>
-<span style="padding-left:3em"><strong>[Login Details]</strong> use this shortcode to yield login information in the section</span></small>
-    <br>
-    <div class="form-group" style="margin-top: 10px;">
-        <div class="col-sm-12">
-    {!! Form::hidden('survey_id', $survey_id) !!}
-
-
-                <a href="{{$actionurl}}" class="btn btn-danger btn-md">Cancel</a>
-
-  {!! Form::submit('Send Email', array('class' => 'btn btn-success')) !!}
-  </div>
-  </div>
-
-  {!! Form::close() !!}
-
-    </div>
-
-  </div>
-
-
-
-</div>
-</div>
-</div>
-</div>
-
-
-
-
-{!! HTML::script('script/bootstrap-filestyle.js')!!}
-{{ HTML::style('css/bootstrap3-wysihtml5.min.css') }}
-
-{{ HTML::script('script/bootstrap3-wysihtml5.js') }}
-
-  <style media="screen">
-.nav-tabs li.bv-tab-error>a {
-  color: #555;
-}
-.nav.nav-tabs a
-{
-  border:1px solid #eee;
-}
-.nav > li.active a, .nav > li.active a:hover, .nav > li.active a:focus {
-    background-color: #286090;
-    border-color: #286090;
-    color: #ffffff;
-}
+    .nav>li.active a,
+    .nav>li.active a:hover,
+    .nav>li.active a:focus {
+        background-color: #286090;
+        border-color: #286090;
+        color: #ffffff;
+    }
 </style>
 <script type="text/javascript">
-	$('#attach').hide();
+    $('#attach').hide();
 	$('#attachment').change(function(){
 		if($(this). prop("checked") == true){
 			$('#attach').show();
@@ -602,7 +669,7 @@ $('#attach_respondent').hide();
 	});
 </script>
 <script type="text/javascript">
-	$(document).ready(function(){
+    $(document).ready(function(){
 		$(":file").filestyle({btnClass: "btn-success"});
 
         $('#distribute-participants').bootstrapValidator({
@@ -997,50 +1064,66 @@ attachment_doc:{
 	})
 </script>
 <style type="text/css">
-iframe.wysihtml5-sandbox{height: 214px !important;}
-.textnothide {
-    display: block !important;
-  	height: 215px !important;
-    position: absolute;
-   width: 97.6% ;
-    z-index: -1;
-}
-.state-icon {
-    left: -5px;
-}
-.list-group-item-primary {
-    color: rgb(255, 255, 255);
-    background-color: rgb(66, 139, 202);
-}
+    iframe.wysihtml5-sandbox {
+        height: 214px !important;
+    }
 
-.well .list-group {
-    margin-bottom: 0px;
-}
-.well{margin-bottom: 0px;}
-li.list-group-item {
-    float: left;
-    margin-right: 1%;
-    width: 32%;
-}
-.list-group-item:last-child,.list-group-item:first-child { border-radius:inherit;}
-.participant-wraper {
-    float: left;
-    width: 100%;
-}
-.split-4 {
-    float: left;
-    width: 50%;
-}
+    .textnothide {
+        display: block !important;
+        height: 215px !important;
+        position: absolute;
+        width: 97.6%;
+        z-index: -1;
+    }
+
+    .state-icon {
+        left: -5px;
+    }
+
+    .list-group-item-primary {
+        color: rgb(255, 255, 255);
+        background-color: rgb(66, 139, 202);
+    }
+
+    .well .list-group {
+        margin-bottom: 0px;
+    }
+
+    .well {
+        margin-bottom: 0px;
+    }
+
+    li.list-group-item {
+        float: left;
+        margin-right: 1%;
+        width: 32%;
+    }
+
+    .list-group-item:last-child,
+    .list-group-item:first-child {
+        border-radius: inherit;
+    }
+
+    .participant-wraper {
+        float: left;
+        width: 100%;
+    }
+
+    .split-4 {
+        float: left;
+        width: 50%;
+    }
 
 
-hr{
- border: 0; height: 1px; background: #333 none repeat scroll 0 0;
- }
-
+    hr {
+        border: 0;
+        height: 1px;
+        background: #333 none repeat scroll 0 0;
+    }
 </style>
 
 <script>
-$(document).ready(function() {
+    $(document).ready(function() {
 
 //To initial select Participant
 $('#pa-participant').prop('checked','true');

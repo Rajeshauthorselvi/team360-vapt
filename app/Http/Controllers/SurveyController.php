@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Rater;
-use App\Survey_rater;
+use App\Models\Rater;
+use App\Models\Survey_rater;
 use Arr;
 use DB;
 use File;
@@ -52,8 +52,7 @@ class SurveyController extends Controller
      */
     public function create()
     {
-        return view('admin.survey.create')
-            ->with('title', 'New Survey');
+        return view('admin.survey.create')->with('title', 'New Survey');
     }
 
     /**
@@ -74,20 +73,25 @@ class SurveyController extends Controller
             'send_email_from' => 'required|email',
         );
         $input = $request->all();
-//
+
         $multi_rater_value = $request['rater_value'];
+
+        $input['title']=strip_tags($input['title']);
+        $input['client_name']=strip_tags($input['client_name']);
+        $input['sender_name']=strip_tags($input['sender_name']);
+
         $validator = Validator::make($input, $rules);
         if ($validator->passes()) {
 
-// $rater_id=DB::table('rater')->firstOrCreate(['rater'=>$request->rater]);
-
             Arr::forget($input, ['_token', 'logo', 'right_logo', '_wysihtml5_mode', 'rater', 'rater_value']);
-            // array_forget($input,['_token','logo','right_logo','_wysihtml5_mode','rater','rater_value']);
             $input['logo'] = '';
             $input['right_logo'] = '';
             $input['survey_theme_id'] = 1;
 
-            $input['sender_name']=$request->sender_name;
+            $input['title']=strip_tags($request->title);
+            $input['client_name']=strip_tags($request->client_name);
+            $input['sender_name']=strip_tags($request->sender_name);
+
             $dtparts = explode(" ", $input['start_date']);
             $time = date("H:i:s", strtotime($dtparts[1] . $dtparts[2]));
             $date = str_replace('/', '-', $dtparts[0]);
@@ -100,6 +104,7 @@ class SurveyController extends Controller
 
             $input['start_date'] = $start_date;
             $input['end_date'] = $end_date;
+            $input['anonymity'] = $request->anonymity ?? 1;
 
             $survey_id = DB::table('surverys')->insertGetId($input);
 
@@ -112,8 +117,6 @@ class SurveyController extends Controller
                 $rater_survey = DB::table('survey_rater')->insert(['rater_id' => $insert_self->id, 'survey_id' => $survey_id]);
 
             }
-
-//$rater=DB::table('rater')->insert($survey_user_relation);
 
             foreach ($multi_rater_value as $key => $value) {
 
@@ -222,6 +225,10 @@ class SurveyController extends Controller
         if (is_null($dimension_hide)) {$dimension_hide = '0';} else { $dimension_hide = '1';}
         $input['dimension_hide'] = $dimension_hide;
 
+        $input['title']=strip_tags($input['title']);
+        $input['client_name']=strip_tags($input['client_name']);
+        $input['sender_name']=strip_tags($input['sender_name']);
+
         $validator = Validator::make($input, $rules);
         if ($validator->passes()) {
             Arr::forget($input, ['_token', 'logo', '_method', 'rater', 'right_logo', 'llogo_path', 'rlogo_path', '_wysihtml5_mode', 'rater_value']);
@@ -235,6 +242,7 @@ class SurveyController extends Controller
             $time = date("H:i:s", strtotime($dtparts[1] . $dtparts[2]));
             $date = str_replace('/', '-', $dtparts[0]);
             $end_date = date('Y-m-d', strtotime($date)) . " " . $time;
+
             $input['start_date'] = $start_date;
             $input['end_date'] = $end_date;
             DB::table('survey_rater')->where('survey_id', $id)->delete();
@@ -249,36 +257,7 @@ class SurveyController extends Controller
                 ->leftjoin('user_survey_respondent', 'surverys.id', 'user_survey_respondent.survey_id')
                 ->where('surverys.id', $id)
                 ->get();
-/*
-foreach ($change_status as $key => $values_status) {
-$date = date('Y-m-d H:i:s');
-if ($date > $values_status->end_date) {
-if ($values_status->survey_status != "3" || $values_status->survey_status != 2) {
-DB::table('user_survey_respondent')
-->where('survey_id', $values_status->survey_id)
-->where('survey_status', '!=', '3')
-->where('survey_status', '!=', '2')
-->update(['survey_status' => 0]);
-}
-} elseif ($date < $values_status->start_date) {
-if ($values_status->survey_status != "3" || $values_status->survey_status != 2) {
-DB::table('user_survey_respondent')
-->where('survey_id', $values_status->survey_id)
-->where('survey_status', '!=', '3')
-->where('survey_status', '!=', '2')
-->update(['survey_status' => 4]);
-}
-} else {
-if ($values_status->survey_status != "3" || $values_status->survey_status != 2) {
-DB::table('user_survey_respondent')
-->where('survey_id', $values_status->survey_id)
-->where('survey_status', '!=', '3')
-->where('survey_status', '!=', '2')
-->update(['survey_status' => 1]);
-}
-}
-}
- */
+
             if ($request->hasFile('logo')) {
 
                 $survey_details = DB::table('surverys')->find($id);

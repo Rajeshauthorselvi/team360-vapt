@@ -7,7 +7,10 @@
 <div class="col-md-6  col-xs-6 col-sm-6 logo ">
 
 
-{!! html_entity_decode(HTML::linkRoute('admin.dashboard',HTML::image('images/logo.jpg','Logo',['class'=>'img-responsive']))) !!}
+    <a href="{{ route('admin.dashboard') }}">
+        <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="img-responsive">
+    </a>
+
 
 
 </div>

@@ -43,9 +43,9 @@
             <div class="welcome-footer text-center">
                 @if ($survey_id == 55)
                     <a href="{{ url($url . '/user-dashboard') }}" class="btn btn-danger">Disagree</a>
-                    {{ Form::button('Agree', ['class' => 'btn btn-submit ', 'id' => 'take-survey']) }}
+                    <button type="button" class="btn btn-submit" id="take-survey">Agree</button>
                 @else
-                    {{ Form::button('Take Survey', ['class' => 'btn btn-submit ', 'id' => 'take-survey']) }}
+                    <button type="button" class="btn btn-submit" id="take-survey">Take Survey</button>
                 @endif
             </div>
         </div>

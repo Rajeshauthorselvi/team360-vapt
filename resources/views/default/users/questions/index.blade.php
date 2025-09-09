@@ -6,14 +6,16 @@
 
     <div class="container parent">
         <div class="row">
-            {{ HTML::script('script/question-survey-common.js') }}
+            <script src="{{ asset('script/question-survey-common.js') }}"></script>
+
             @include('default.users.questions.functions')
 
             @include('default.users.questions.welcome')
 
             <div class="col-sm-12  col-md-12 col-xs-12 welcome-txt" id="question-container">
 
-                {!! Form::open(['route' => ['user.store', config('site.survey_slug')], 'method' => 'POST', 'id' => 'survey-user-form']) !!}
+                <form method="POST" action="{{ route('user.store', config('site.survey_slug')) }}" id="survey-user-form">
+                    @csrf
 
 
                 <?php $no = 1; ?>
@@ -45,11 +47,12 @@
                     </ul>
                 </div>
 
-                {{ Form::hidden('currentli', 1, ['id' => 'currentli']) }}
-                {{ Form::hidden('formaction', 'submit', ['id' => 'formaction']) }}
+                <input type="hidden" name="currentli" id="currentli" value="1">
+                <input type="hidden" name="formaction" id="formaction" value="submit">
+
                 <input type="hidden" name="user_survey_respondent_id" value="{{ $user_survey_id }}">
                 <input type="hidden" name="survey_id" value="{{ $survey_id }}" class="survey_id">
-                {{ Form::close() }}
+                </form>
 
             </div>
 

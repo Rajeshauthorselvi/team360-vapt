@@ -21,38 +21,37 @@
                                  </ul> </div>
                                 @endif
 
-        {!! Form::model($user, ['method' => 'PATCH', 'route' => ['addusers.update', $user->id],'id'=>'add-participants','class'=>'form-horizontal']) !!}
+        <form method="POST" action="{{ route('addusers.update', $user->id) }}" id="add-participants" class="form-horizontal">
+            @csrf
+            @method('PATCH')
 
-       <div class="form-group">
 
-        {{Form::label('title','First Name',['class'=>'col-sm-2 '])}}
-        <div class="col-sm-10">
-        {{Form::text('fname',null,['class'=>'form-control','placeholder'=>'First Name'])}}
-        </div>
+            <div class="form-group">
+                <label for="fname" class="col-sm-2">First Name</label>
+                <div class="col-sm-10">
+                    <input type="text" name="fname" class="form-control" placeholder="First Name" oninput="sanitizeInput(this)" value="{{ $user->fname }}">
+                </div>
+            </div>
 
-        </div>
-        <div class="form-group">
+            <div class="form-group">
+                <label for="lname" class="col-sm-2">Last Name</label>
+                <div class="col-sm-10">
+                    <input type="text" name="lname" class="form-control" placeholder="Last Name" oninput="sanitizeInput(this)" value="{{ $user->lname }}">
+                </div>
+            </div>
 
-        {{Form::label('title','Last Name',['class'=>'col-sm-2 '])}}
-        <div class="col-sm-10">
-        {{Form::text('lname',null,['class'=>'form-control','placeholder'=>'Last Name'])}}
-        </div>
-
-        </div>
-        <div class="form-group">
-
-        {{Form::label('title','Email',['class'=>'col-sm-2 '])}}
-        <div class="col-sm-10">
-        {{Form::email('email',null,['class'=>'form-control','placeholder'=>'Email'])}}
-        </div>
-
-        </div>
+            <div class="form-group">
+                <label for="email" class="col-sm-2">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" name="email" class="form-control" placeholder="Email"  value="{{ $user->email }}">
+                </div>
+            </div>
 
 
 
  <div class="form-group" id="optionTemplate">
  <div class="col-sm-12">
- {{Form::hidden('survey_id',$survey_id)}}
+ <input type="hidden" name="survey_id" value="{{ $survey_id }}">
 <!-- <a href="javascript:void(0);" class="addButton btn btn-primary pull-right" title="Add field"><span class="glyphicon glyphicon-plus">Add</span></a>-->
  </div>
  </div>
@@ -62,7 +61,7 @@
 
 
    </div>
-      {!! Form::close() !!}
+        </form>
   </div>
 </div>
 </div>

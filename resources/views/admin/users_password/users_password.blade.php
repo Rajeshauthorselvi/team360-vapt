@@ -11,15 +11,16 @@
 	  	</div>
 	  	<div class="panel-body">
 	  		@if(count($survey_details)>0)
-		      {!! Form::open(array( 'route' => ['users-password.store'],'method'=>'POST','class'=>'form-horizontal')) !!}
+		      <form method="POST" action="{{ route('users-password.store') }}" class="form-horizontal">
+                @csrf
 
 		      <input type="hidden" name="survey_id" value="{{$survey_id}}">
 		      <input type="hidden" name="survey_name" value="{{$survey_name}}">
 
 		      <div class="pull-right">
-		    <button type="submit" name="button" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Download <span class="fa fa-file-excel-o"></span></button>
+		            <button type="submit" name="button" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Download <span class="fa fa-file-excel-o"></span></button>
 		      </div>
-		      {!! Form::close() !!}
+            </form>
 		   <br>
 		    <br>
 		    <br>
@@ -64,7 +65,9 @@
 					      </td>
 					        @if($user_details->notify_email_date)
 
-					          <td>{!! HTML::image('images/calendar-icon.png')." ".date('d/m/Y',strtotime($user_details->notify_email_date))." ".HTML::image('images/time-icon.png')." ".date('g:i:A',strtotime($user_details->notify_email_date))!!} </td>
+					          <td>
+                                <img src="images/calendar-icon.png"> {{ date('d/m/Y', strtotime($user_details->notify_email_date)) }} <img src="images/time-icon.png"> {{ date('g:i:A', strtotime($user_details->notify_email_date)) }}
+                              </td>
 					        @else
 					        <td class="text-center">-</td>
 					        @endif
@@ -96,12 +99,12 @@
 	  	</div>
     </div>
 </div>
-{!! HTML::script('script/dataTable/jquery.dataTables.min.js') !!}
- {!! HTML::style('css/dataTable/jquery.dataTables.min.css') !!}
+<script src="script/dataTable/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="css/dataTable/jquery.dataTables.min.css">
 
+<script src="js/dataTables.bootstrap4.min.js"></script>
+<link rel="stylesheet" href="css/dataTable/dataTables.bootstrap4.min.css">
 
- {!! HTML::script('js/dataTables.bootstrap4.min.js') !!}
- {!! HTML::style('css/dataTable/dataTables.bootstrap4.min.css') !!}
 
 <script type="text/javascript">
 

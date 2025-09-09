@@ -22,6 +22,6 @@ class User
             return $next($request);
         }
         return Redirect::route('admin.dashboard');
-        
+
     }
 }

@@ -4,154 +4,158 @@
 
 
 <div class="container">
-<div class="row">
+    <div class="row">
 
-  <div class="col-sm-8 col-sm-offset-2">
-    <h3 class="text-center">Add Participants</h3>
+        <div class="col-sm-8 col-sm-offset-2">
+            <h3 class="text-center">Add Participants</h3>
 
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#add-manually">Add New</a></li>
-    <li><a data-toggle="tab" href="#add-import">Bulk Import</a></li>
-  </ul>
-
-
-
-  <div class="tab-content">
-
-    <div id="add-manually" class="tab-pane fade in active">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#add-manually">Add New</a></li>
+                <li><a data-toggle="tab" href="#add-import">Bulk Import</a></li>
+            </ul>
 
 
-                        @if ($errors->any())
-                                  <div class="alert alert-danger fade in">
 
-                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <div class="tab-content">
 
-                                <strong>Error!</strong> A problem has been occurred while submitting form.<br>
-                                <ul>
-                                {!! implode('', $errors->all('<li class="text-danger">:message</li>')) !!}
-                                
-                                 </ul> </div>
-                                @endif   
-      {!! Form::open(array('route' => 'addusers.store','method'=>'POST','id'=>'add-participants','class'=>'form-horizontal')) !!}
+                <div id="add-manually" class="tab-pane fade in active">
 
-       <div class="form-group">
-        {{Form::label('title','First Name',['class'=>'col-sm-2 '])}} 
-        <div class="col-sm-10">
-        {{Form::text('fname',null,['class'=>'form-control','placeholder'=>'First Name'])}}
+                    @if ($errors->any())
+                    <div class="alert alert-danger fade in">
+
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+
+                        <strong>Error!</strong> A problem has been occurred while submitting form.<br>
+                        <ul>
+                            {!! implode('', $errors->all('<li class="text-danger">:message</li>')) !!}
+
+                        </ul>
+                    </div>
+                    @endif
+                    <form action="{{ route('addusers.store') }}" method="POST" id="add-participants" class="form-horizontal">
+                        @csrf
+
+                    <div class="form-group">
+                        <label for="title" class="col-sm-2">First Name</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="fname" class="form-control" placeholder="First Name" oninput="sanitizeInput(this)">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="title" class="col-sm-2">Last Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="lname" class="form-control" placeholder="Last Name" oninput="sanitizeInput(this)">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="title" class="col-sm-2">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" name="email" class="form-control" placeholder="Email">
+                        </div>
+
+                    </div>
+
+                    <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+                    <input type="hidden" name="rater" value="self">
+
+
+                    <div class="form-group text-center " align="center">
+                        <a href="{{URL::route('addusers.show',$survey_id)}}" class="btn btn-danger">Cancel</a>
+                        <button type="submit" class="btn btn-success">Save</button>
+
+
+                    </div>
+                    </form>
+                </div>
+
+                <div id="add-import" class="tab-pane fade">
+                    @if(Session::get('msg'))
+
+                    <div class="alert alert-danger import-process-error">
+                        <a class="close" onclick="$('.alert').hide()">x</a>
+                        @if(Session::get('msg')!="Heading Mismatch line @ 1 .
+                        (first_name,last_name,email,demographic_data) Plz enter this format.")
+                        <strong>Whoops! Some error occurred.</strong><br><br>
+                        <ul>
+                            @foreach(Session::get('msg') as $value)
+                            <li>{{$value}}</li>
+                            @endforeach
+                        </ul>
+                        @else
+                        {{Session::get('msg')}}
+                        @endif
+                    </div>
+                    @endif
+                    <form action="{{ URL::route('importusers') }}" class="form-horizontal" method="POST"
+                        id="import_process" enctype="multipart/form-data">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <div class="form-group">
+                            <p class="text-info">Upload .xls .xlsx file with following headers to update the participant
+                                list. <b>(fname,lname,email)</b></p>
+                            <p class="text-info">Download sample users <a href="{{URL::route('addusers.index')}}"
+                                    class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Download</a></p>
+                            <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+                            <input type="file" class="form-control filestyle" data-buttonName="btn-primary"
+                                placeholder="File type:xls,xlsx" name="import_file" id="upload" accept=".xls, .xlsx" />
+                        </div>
+
+                        <div class="form-group" align="center">
+                            <a href="{{URL::route('addusers.show',$survey_id)}}" class="btn btn-danger">Cancel</a>
+                            <button type="submit" class="btn btn-success">Save</button>
+
+                        </div>
+
+                    </form>
+                </div>
+
+
+            </div>
+
+
+
+
+
         </div>
-        
-        </div>
-        <div class="form-group">
-
-        {{Form::label('title','Last Name',['class'=>'col-sm-2 '])}} 
-        <div class="col-sm-10">
-        {{Form::text('lname',null,['class'=>'form-control','placeholder'=>'Last Name'])}}
-        </div>
-        
-        </div>
-        <div class="form-group">
-
-        {{Form::label('title','Email',['class'=>'col-sm-2 '])}} 
-        <div class="col-sm-10">
-        {{Form::email('email',null,['class'=>'form-control','placeholder'=>'Email'])}}
-        </div>
-        
-        </div>
-	<!--<div class="form-group">
-
-        {{Form::label('rater','Respondent / Rater Type',['class'=>'col-sm-2 '])}} 
-        <div class="col-sm-10">
-        {{Form::text('rater','self',['class'=>'form-control','placeholder'=>'Respondent / Rater Type'])}}
-        </div>
-        
-        </div>-->
-{{Form::hidden('survey_id',$survey_id)}}
-{{Form::hidden('rater','self')}}
-
- 
-   <div class="form-group text-center " align="center" >
-      <a href="{{URL::route('addusers.show',$survey_id)}}" class="btn btn-danger">Cancel</a>
-    <button type="submit" class="btn btn-success">Save</button>
-
-       
-   </div>
-      {!! Form::close() !!}
-  </div>
-    
-    
-
-   
-    <div id="add-import" class="tab-pane fade">
-     @if(Session::get('msg'))
-
-      <div class="alert alert-danger import-process-error">
-        <a class="close" onclick="$('.alert').hide()">x</a>
-        @if(Session::get('msg')!="Heading Mismatch line @ 1 . (first_name,last_name,email,demographic_data) Plz enter this format.")
-           <strong>Whoops! Some error occurred.</strong><br><br>
-        <ul>
-          @foreach(Session::get('msg') as $value)
-            <li>{{$value}}</li>
-          @endforeach
-        </ul>
-        @else
-          {{Session::get('msg')}}
-        @endif
-      </div>
-    @endif
-    <form action="{{ URL::route('importusers') }}" class="form-horizontal" method="POST" id="import_process" enctype="multipart/form-data">
-      <input type="hidden" name="_token" value="{{ csrf_token() }}">
-      <div class="form-group">
-      <p class="text-info">Upload .xls .xlsx file with following headers to update the participant list. <b>(fname,lname,email)</b></p>
-      <p class="text-info" >Download sample users <a href="{{URL::route('addusers.index')}}" class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Download</a></p>
-      {{Form::hidden('survey_id',$survey_id)}}
-            <input type="file" class="form-control filestyle" data-buttonName="btn-primary" placeholder="File type:xls,xlsx" name="import_file" id="upload" accept=".xls, .xlsx"/>
-      </div>
-    
-<div class="form-group" align="center">
-<a href="{{URL::route('addusers.show',$survey_id)}}" class="btn btn-danger">Cancel</a>
-       <button type="submit" class="btn btn-success">Save</button>
-   
-</div>
-       
-    </form>
     </div>
-
-
-  </div>
-    
-
-    
-
-  
- </div>
 </div>
-</div>
-{!! HTML::script('script/bootstrap-filestyle.js')!!}
+<script src="{{ asset('script/bootstrap-filestyle.js') }}"></script>
+
 <style media="screen">
-.nav-tabs li.bv-tab-error>a {
-  color: #555;
-}
-.nav.nav-tabs a
-{
-  border:1px solid #eee;
-}
-.nav > li.active a ,.nav > li.active a:hover,.nav > li.active a:focus {
-    background-color: #e6e7e8;
-}
+    .nav-tabs li.bv-tab-error>a {
+        color: #555;
+    }
+
+    .nav.nav-tabs a {
+        border: 1px solid #eee;
+    }
+
+    .nav>li.active a,
+    .nav>li.active a:hover,
+    .nav>li.active a:focus {
+        background-color: #e6e7e8;
+    }
 </style>
 <style media="screen">
-	.glyphicon-copy{
-		color: #2041bd;
-	}
-	.nav > li.active a, .nav > li.active a:hover, .nav > li.active a:focus {
-    background-color: #286090;
-    border-color: #286090;
-    color: #ffffff;
-}
+    .glyphicon-copy {
+        color: #2041bd;
+    }
+
+    .nav>li.active a,
+    .nav>li.active a:hover,
+    .nav>li.active a:focus {
+        background-color: #286090;
+        border-color: #286090;
+        color: #ffffff;
+    }
 </style>
 <script type="text/javascript">
-	$(document).ready(function(){
-		
+    $(document).ready(function(){
+
 	if($(".import-process-error").css('visibility'))
 	{
 	  $('.nav-tabs a[href="#add-import"]').tab('show')
@@ -185,7 +189,7 @@
                     }//remote
                   }
               },
-                 
+
                 fname: {
                     validators: {
                         notEmpty: {

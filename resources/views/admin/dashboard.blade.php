@@ -3,19 +3,16 @@
 @section('content')
 
 
-    <div class="container">
+    <div class="" style="padding: 10px;">
         <div class="row">
             <div class="col-md-12">
-
-
                 <div class="col-md-12 text-right">
                     <a href="javascript:void(0)" attr-href="{{ route('delete.survey') }}"
                         class="btn btn-danger delete-survey">
                         Delete Survey
                     </a>
-                    {{ HTML::LinkRoute('survey.index', 'Copy & Create Survey', [], ['class' => 'btn btn-warning', 'id' => 'copy-survey', 'data-toggle' => 'tooltip', 'title' => 'Copy & Create Survey']) }}
-                    {{ HTML::LinkRoute('survey.create', 'Create New Survey', [], ['class' => 'btn btn-success', 'data-toggle' => 'tooltip', 'title' => 'Create New Survey']) }}
-
+                    <a href="{{ route('survey.index') }}" class="btn btn-warning" id="copy-survey" data-toggle="tooltip" title="Copy & Create Survey">Copy & Create Survey</a>
+                    <a href="{{ route('survey.create') }}" class="btn btn-success" data-toggle="tooltip" title="Create New Survey">Create New Survey</a>
                 </div>
                 @if (Session::has('error_info'))
                     <?php
@@ -34,12 +31,6 @@
                         <div class="alert alert-success alert-dismissable" style="clear: both;">
                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                             <strong>Success!</strong> Mail Sent Successfully.<br />
-                            <!--<strong> <?php $emails = str_replace(',', ' ,<br />', $email);
-echo $emails; ?></strong>-->
-
-
-
-
                         </div>
                     @endif
                     <?php
@@ -91,12 +82,13 @@ echo $emails; ?></strong>-->
                                 <th class="text-center">Reports</th>
                             </thead>
                             <tbody>
-                                <?php $count = 1;
-                                $class = ['class' => 'btn btn-link']; ?>
+                                <?php $count = 1; ?>
                                 @if (count($active_survey_details) > 0)
                                     @foreach ($active_survey_details as $survey)
                                         <tr>
-                                            <td class="text-center">{{ Form::radio('survey', $survey->id, null) }}</td>
+                                            <td class="text-center">
+                                                <input type="radio" name="survey" id="" value="{{ $survey->id }}">
+                                            </td>
                                             <td class="text-left">
                                                 <div>{{ $survey->title }}</div>
                                                 <div class="text-center">
@@ -107,29 +99,46 @@ echo $emails; ?></strong>-->
 
                                             </td>
                                             <td>{{ $survey->client_name }}</td>
-                                            <td class="text-center">{!! HTML::image('images/calendar-icon.png') . ' ' . date('d/m/Y', strtotime($survey->start_date)) . ' ' . HTML::image('images/time-icon.png') . ' ' . date('H:i:A', strtotime($survey->start_date)) !!}
-                                                <br>
-                                                {!! HTML::image('images/calendar-icon.png') . ' ' . date('d/m/Y', strtotime($survey->end_date)) . ' ' . HTML::image('images/time-icon.png') . ' ' . date('H:i:A', strtotime($survey->end_date)) !!}
-                                            </td>
                                             <td class="text-center">
-                                                {!! html_entity_decode(link_to_route('questions.show', HTML::image('images/manage-icon.png') . ' Manage', [$survey->id], $class)) !!}
+                                                <img src="{{ asset('images/calendar-icon.png') }}" alt="Calendar Icon"> {{ date('d/m/Y', strtotime($survey->start_date)) }}
+                                                <img src="{{ asset('images/time-icon.png') }}" alt="Time Icon"> {{ date('H:i:A', strtotime($survey->start_date)) }}
                                                 <br>
-                                                {!! html_entity_decode(link_to_route('ques.ques_export', ' <span class="fa fa-question-circle" style="color:#2041BD"></span> Download Question', ['survey_id=' . $survey->id, 'survey_name=' . $survey->title], $class)) !!}
-                                                <br>
-                                                {!! html_entity_decode(link_to_route('questions_group', HTML::image('images/manage-icon.png') . ' Question Group', ['survey_id=' . $survey->id], $class)) !!}
-
+                                                <img src="{{ asset('images/calendar-icon.png') }}" alt="Calendar Icon"> {{ date('d/m/Y', strtotime($survey->end_date)) }}
+                                                <img src="{{ asset('images/time-icon.png') }}" alt="Time Icon"> {{ date('H:i:A', strtotime($survey->end_date)) }}
                                             </td>
-                                            <td class="text-center">{!! html_entity_decode(link_to_route('theme.show', HTML::image('images/manage-icon.png') . ' Manage', [$survey->id], $class)) !!}</td>
 
                                             <td class="text-center">
-
-                                                {!! html_entity_decode(link_to_route('addusers.show', HTML::image('images/manage-icon.png') . ' Manage', [$survey->id], $class)) !!}
-
-
+                                                <a href="{{ route('questions.show', [$survey->id]) }}" class="btn btn-link">
+                                                    <img src="{{ asset('images/manage-icon.png') }}" alt="Manage Icon"> Manage
+                                                </a>
+                                                <br>
+                                                <a href="{{ route('ques.ques_export', ['survey_id=' . $survey->id, 'survey_name=' . $survey->title]) }}" class="btn btn-link">
+                                                    <span class="fa fa-question-circle" style="color:#2041BD"></span> Download Question
+                                                </a>
+                                                <br>
+                                                <a href="{{ route('questions_group', ['survey_id=' . $survey->id]) }}" class="btn btn-link">
+                                                    <img src="{{ asset('images/manage-icon.png') }}" alt="Manage Icon"> Question Group
+                                                </a>
                                             </td>
+
+                                            <td class="text-center">
+                                                <a href="{{ route('theme.show', [$survey->id]) }}" class="btn btn-link">
+                                                    <img src="{{ asset('images/manage-icon.png') }}" alt="Manage Icon"> Manage
+                                                </a>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <a href="{{ route('addusers.show', [$survey->id]) }}" class="btn btn-link">
+                                                    <img src="{{ asset('images/manage-icon.png') }}" alt="Manage Icon"> Manage
+                                                </a>
+                                            </td>
+
                                             <td class="text-left">
 
-                                                {!! html_entity_decode(link_to_route('distribute.show', HTML::image('images/mail-icon.png') . ' Email', [$survey->id], $class)) !!}<br>
+                                                <a href="{{ route('distribute.show', [$survey->id]) }}" class="btn btn-link">
+                                                    <img src="{{ asset('images/mail-icon.png') }}" alt="Mail Icon"> Email
+                                                </a>
+                                                <br>
                                                 <div id="text{{ $count }}" style="display:none"><?php echo url('/' . $survey->url) . '/login'; ?>
                                                 </div>
 
@@ -156,14 +165,21 @@ echo $emails; ?></strong>-->
                                                 </a>
                                             </td>
                                             <td class="text-left">
-                                                {!! html_entity_decode(link_to_route('status.rawscore', ' <span class="glyphicon glyphicon-align-justify" style="color:#2041BD"></span> Raw score', ['survey_id=' . $survey->id], $class)) !!}
+                                                <a href="{{ route('status.rawscore', ['survey_id=' . $survey->id]) }}" class="btn btn-link">
+                                                    <span class="glyphicon glyphicon-align-justify" style="color:#2041BD"></span> Raw score
+                                                </a>
                                                 <br>
-                                                {!! html_entity_decode(link_to_route('text.text_response', ' <span class="glyphicon glyphicon-text-width" style="color:#2041BD"></span> Text Response', ['survey_id=' . $survey->id], $class)) !!}
-                                                <br />
-                                                {!! html_entity_decode(link_to_route('status.status_report', ' <span class="glyphicon glyphicon-export" style="color:#2041BD"></span> Status Report', ['survey_id=' . $survey->id], $class)) !!}
-                                                <br />
-
-                                                {!! html_entity_decode(link_to_route('participantreport.show', ' <span class="glyphicon glyphicon-user" style="color:#2041BD"></span> Participant Reports', [$survey->id], $class)) !!}
+                                                <a href="{{ route('text.text_response', ['survey_id=' . $survey->id]) }}" class="btn btn-link">
+                                                    <span class="glyphicon glyphicon-text-width" style="color:#2041BD"></span> Text Response
+                                                </a>
+                                                <br>
+                                                <a href="{{ route('status.status_report', ['survey_id=' . $survey->id]) }}" class="btn btn-link">
+                                                    <span class="glyphicon glyphicon-export" style="color:#2041BD"></span> Status Report
+                                                </a>
+                                                <br>
+                                                <a href="{{ route('participantreport.show', [$survey->id]) }}" class="btn btn-link">
+                                                    <span class="glyphicon glyphicon-user" style="color:#2041BD"></span> Participant Reports
+                                                </a>
 
                                                 {{-- <br>
 <a href="{{ url('status_summary/'.$survey->id) }}" class="btn btn-link">
@@ -217,12 +233,13 @@ echo $emails; ?></strong>-->
                                 <th class="text-center">Reports</th>
                             </thead>
                             <tbody>
-                                <?php $count = 1;
-                                $class = ['class' => 'btn btn-link']; ?>
+                                <?php $count = 1; ?>
                                 @if (count($closed_survey_details) > 0)
                                     @foreach ($closed_survey_details as $survey)
                                         <tr>
-                                            <td class="text-center">{{ Form::radio('survey', $survey->id, null) }}</td>
+                                            <td class="text-center">
+                                                <input type="radio" name="survey" value="$survey->id">
+                                            </td>
                                             <td class="text-left">
                                                 <div>{{ $survey->title }}</div>
                                                 <div class="text-center"><a
@@ -233,24 +250,43 @@ echo $emails; ?></strong>-->
 
                                             </td>
                                             <td>{{ $survey->client_name }}</td>
-                                            <td class="text-center">{!! HTML::image('images/calendar-icon.png') . ' ' . date('d/m/Y', strtotime($survey->start_date)) . ' ' . HTML::image('images/time-icon.png') . ' ' . date('H:i:A', strtotime($survey->start_date)) !!}
-                                                <br>
-                                                {!! HTML::image('images/calendar-icon.png') . ' ' . date('d/m/Y', strtotime($survey->end_date)) . ' ' . HTML::image('images/time-icon.png') . ' ' . date('H:i:A', strtotime($survey->end_date)) !!}
-                                            </td>
                                             <td class="text-center">
-                                                {!! html_entity_decode(link_to_route('questions.show', HTML::image('images/manage-icon.png') . ' Manage', [$survey->id], $class)) !!}
+                                                <img src="{{ asset('images/calendar-icon.png') }}" alt="Calendar Icon"> {{ date('d/m/Y', strtotime($survey->start_date)) }}
+                                                <img src="{{ asset('images/time-icon.png') }}" alt="Time Icon"> {{ date('H:i:A', strtotime($survey->start_date)) }}
                                                 <br>
-                                                {!! html_entity_decode(link_to_route('ques.ques_export', ' <span class="fa fa-question-circle" style="color:#2041BD"></span> Download Question', ['survey_id=' . $survey->id, 'survey_name=' . $survey->title])) !!}
+                                                <img src="{{ asset('images/calendar-icon.png') }}" alt="Calendar Icon"> {{ date('d/m/Y', strtotime($survey->end_date)) }}
+                                                <img src="{{ asset('images/time-icon.png') }}" alt="Time Icon"> {{ date('H:i:A', strtotime($survey->end_date)) }}
                                             </td>
-                                            <td class="text-center">{!! html_entity_decode(link_to_route('theme.show', HTML::image('images/manage-icon.png') . ' Manage', [$survey->id], $class)) !!}</td>
+
                                             <td class="text-center">
-
-                                                {!! html_entity_decode(link_to_route('addusers.show', HTML::image('images/manage-icon.png') . ' Manage', [$survey->id], $class)) !!}
-
+                                                <a href="{{ route('questions.show', [$survey->id]) }}" class="btn btn-link">
+                                                    <img src="{{ asset('images/manage-icon.png') }}" alt="Manage Icon"> Manage
+                                                </a>
+                                                <br>
+                                                <a href="{{ route('ques.ques_export', ['survey_id=' . $survey->id, 'survey_name=' . $survey->title]) }}">
+                                                    <span class="fa fa-question-circle" style="color:#2041BD"></span> Download Question
+                                                </a>
                                             </td>
+
+                                            <td class="text-center">
+                                                <a href="{{ route('theme.show', [$survey->id]) }}" class="btn btn-link">
+                                                    <img src="{{ asset('images/manage-icon.png') }}" alt="Manage Icon"> Manage
+                                                </a>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <a href="{{ route('addusers.show', [$survey->id]) }}" class="btn btn-link">
+                                                    <img src="{{ asset('images/manage-icon.png') }}" alt="Manage Icon"> Manage
+                                                </a>
+                                            </td>
+
                                             <td class="text-left">
 
-                                                {!! html_entity_decode(link_to_route('distribute.show', HTML::image('images/mail-icon.png') . ' Email', [$survey->id], $class)) !!}<br>
+                                                <a href="{{ route('distribute.show', [$survey->id]) }}" class="btn btn-link">
+                                                    <img src="{{ asset('images/mail-icon.png') }}" alt="Mail Icon"> Email
+                                                </a>
+                                                <br>
+
                                                 <div id="texta{{ $count }}" style="display:none">
                                                     <?php echo url('/' . $survey->url) . '/login'; ?></div>
                                                 <a class="btn btn-link" href="javascript: void(0)"
@@ -268,14 +304,21 @@ echo $emails; ?></strong>-->
 
                                             </td>
                                             <td class="text-left">
-                                                {!! html_entity_decode(link_to_route('status.rawscore', ' <span class="glyphicon glyphicon-align-justify" style="color:#2041BD"></span> Raw score', ['survey_id=' . $survey->id], $class)) !!}
+                                                <a href="{{ route('status.rawscore', ['survey_id=' . $survey->id]) }}" class="btn btn-link">
+                                                    <span class="glyphicon glyphicon-align-justify" style="color:#2041BD"></span> Raw score
+                                                </a>
                                                 <br>
-                                                {!! html_entity_decode(link_to_route('text.text_response', ' <span class="glyphicon glyphicon-text-width" style="color:#2041BD"></span> Text Response', ['survey_id=' . $survey->id], $class)) !!}
-                                                <br />
-                                                {!! html_entity_decode(link_to_route('status.status_report', ' <span class="glyphicon glyphicon-export" style="color:#2041BD"></span> Status Report', ['survey_id=' . $survey->id], $class)) !!}
-                                                <br />
-
-                                                {!! html_entity_decode(link_to_route('participantreport.show', ' <span class="glyphicon glyphicon-user" style="color:#2041BD"></span> Participant Reports', [$survey->id], $class)) !!}
+                                                <a href="{{ route('text.text_response', ['survey_id=' . $survey->id]) }}" class="btn btn-link">
+                                                    <span class="glyphicon glyphicon-text-width" style="color:#2041BD"></span> Text Response
+                                                </a>
+                                                <br>
+                                                <a href="{{ route('status.status_report', ['survey_id=' . $survey->id]) }}" class="btn btn-link">
+                                                    <span class="glyphicon glyphicon-export" style="color:#2041BD"></span> Status Report
+                                                </a>
+                                                <br>
+                                                <a href="{{ route('participantreport.show', [$survey->id]) }}" class="btn btn-link">
+                                                    <span class="glyphicon glyphicon-user" style="color:#2041BD"></span> Participant Reports
+                                                </a>
 
                                                 {{-- <br>
 <a href="{{ url('status_summary/'.$survey->id) }}" class="btn btn-link">
@@ -314,8 +357,9 @@ echo $emails; ?></strong>-->
                 </div>
 
 
-                {{ HTML::script('script/sweetalert.min.js') }}
-                {{ HTML::style('css/sweetalert.css') }}
+                <link rel="stylesheet" href="{{ asset('css/sweetalert.css') }}">
+                <script src="{{ asset('script/sweetalert.min.js') }}"></script>
+
                 <script>
                     function copyToClipboard(element) {
                         var $temp = $("<input>");
@@ -367,10 +411,11 @@ echo $emails; ?></strong>-->
         });
     </script>
 
-    {!! HTML::script('script/dataTable/jquery.dataTables.min.js') !!}
-    {!! HTML::style('css/dataTable/jquery.dataTables.min.css') !!}
-    {!! HTML::script('js/dataTables.bootstrap4.min.js') !!}
-    {!! HTML::style('css/dataTable/dataTables.bootstrap4.min.css') !!}
+<link rel="stylesheet" href="{{ asset('css/dataTable/jquery.dataTables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/dataTable/dataTables.bootstrap4.min.css') }}">
+<script src="{{ asset('script/dataTable/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+
 
     <script type="text/javascript">
         $(document).ready(function() {

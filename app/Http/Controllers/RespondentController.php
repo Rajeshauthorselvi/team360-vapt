@@ -296,6 +296,8 @@ class RespondentController extends Controller
     public function reopen_survey(Request $request)
     {
 
+        dd($request->all());
+
         $survey_id = $request->get('survey_id');
         $respondent_id = $request->get('respondent_id');
         $participant_id = $request->get('participant_id');

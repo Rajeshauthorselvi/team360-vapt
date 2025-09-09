@@ -9,23 +9,29 @@
 <div class="panel-body">
     <div class="col-sm-3">
         @if(count($participant_id)>0)
-        {!! Form::open(array( 'route' => ['post.raw_response','survey_id='.$survey_id],'method'=>'POST','class'=>'form-horizontal')) !!}
+        <form method="POST" action="{{ route('post.raw_response', ['survey_id' => $survey_id]) }}" class="form-horizontal">
+            @csrf
           <select name="users[]" multiple class="users">
             @foreach($participant_id as $key=>$users)
                 <option value="{{$users}}">{{$key}} </option>
             @endforeach
           </select>
           <button type="submit" name="button" class="btn btn-primary submit">Filter</button>
-        {!! Form::close() !!}
+        </form>
         @endif
      </div>
    <div class="col-sm-9">
 
 	 @if(!empty($responses))
 	    <div class="text-right">
-<span class="btn btn-primary">{!! html_entity_decode(link_to_route('raw_core_ques.ques_export','<span class="glyphicon glyphicon-download-alt"></span> Download Questions <span class="fa fa-file-excel-o" aria-hidden="true"></span>',array('survey_id='.$survey_id,'survey_name='.$survey_name))) !!}</span>
+            <span class="btn btn-primary"><a href="{{ route('raw_core_ques.ques_export', ['survey_id' => $survey_id, 'survey_name' => $survey_name]) }}">
+                <span class="glyphicon glyphicon-download-alt"></span>
+                Download Questions
+                <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+            </a>
+            </span>
 
-	      <button type="submit" name="button" class="btn btn-primary" id="submit"><span class="glyphicon glyphicon-download-alt"></span> Download 		<span class="fa fa-file-excel-o" aria-hidden="true"></span></button>
+	        <button type="submit" name="button" class="btn btn-primary" id="submit"><span class="glyphicon glyphicon-download-alt"></span> Download 		<span class="fa fa-file-excel-o" aria-hidden="true"></span></button>
 	    </div>
 	  @endif
    </div>
@@ -137,11 +143,14 @@
 </div>
 </div>
 
- {!! HTML::script('script/dataTable/jquery.dataTables.min.js') !!}
- {!! HTML::style('css/dataTable/jquery.dataTables.min.css') !!}
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="{{ asset('css/dataTable/jquery.dataTables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/dataTable/dataTables.bootstrap4.min.css') }}">
 
- {!! HTML::script('js/dataTables.bootstrap4.min.js') !!}
- {!! HTML::style('css/dataTable/dataTables.bootstrap4.min.css') !!}
+<!-- DataTables JS -->
+<script src="{{ asset('script/dataTable/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+
 <script type="text/javascript">
 $(document).ready(function() {
 

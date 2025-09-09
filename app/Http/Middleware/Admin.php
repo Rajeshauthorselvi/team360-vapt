@@ -20,9 +20,6 @@ class Admin
         {
             return $next($request);
         }
-
         return Redirect::route('user.dashboard','{survey_name}');
-
-      
     }
 }

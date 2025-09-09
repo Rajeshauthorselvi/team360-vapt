@@ -19,30 +19,36 @@ if($left_logo!="" && $right_logo!="" && $header_text!="") $header_class_name="co
 <div class="full-width">
 	@if(isset($left_logo))
 	<div class="{{$header_class_name}}" align="left">
-	@if(Auth::check())
-	{!! html_entity_decode(HTML::linkRoute('user.dashboard',HTML::image('storage/surveys/'.$left_logo,'Logo',['class'=>'img-responsive']),[config('site.survey_slug')])) !!}
-	@else
-	{!! html_entity_decode(HTML::image('storage/surveys/'.$left_logo,'Logo',['class'=>'img-responsive'])) !!}
-	@endif
+        @if(Auth::check())
+            <a href="{{ route('user.dashboard', config('site.survey_slug')) }}">
+                <img src="{{ asset('storage/surveys/' . $left_logo) }}" alt="Logo" class="img-responsive">
+            </a>
+        @else
+            <img src="{{ asset('storage/surveys/' . $left_logo) }}" alt="Logo" class="img-responsive">
+        @endif
+
 	</div>
-	
+
 	@endif
 
 	@if(isset($header_text))
 	<!-- <div class="{{$header_class_name}} header-des hide-mob" align="center">{!! $header_text !!}</div> -->
 	<div class="col-md-6  col-xs-6 col-sm-4 logo header-des hide-mob " align="center">{!! $header_text !!}</div>
-	
+
 	@endif
 
 
 	@if(isset($right_logo) && $right_logo!="")
 	{{-- <div class="{{$header_class_name}} hide-mob  pull-right" align="right"> --}}
 	<div class="{{$header_class_name}} pull-right" align="right">
-	@if(Auth::check())
-	{!! html_entity_decode(HTML::linkRoute('user.dashboard',HTML::image('storage/surveys/'.$right_logo,'Logo',['class'=>'img-responsive']),[config('site.survey_slug')])) !!}
-	@else
-	{!! html_entity_decode(HTML::image('storage/surveys/'.$right_logo,'Logo',['class'=>'img-responsive'])) !!}
-	@endif
+        @if(Auth::check())
+            <a href="{{ route('user.dashboard', config('site.survey_slug')) }}">
+                <img src="{{ asset('storage/surveys/' . $right_logo) }}" alt="Logo" class="img-responsive">
+            </a>
+        @else
+            <img src="{{ asset('storage/surveys/' . $right_logo) }}" alt="Logo" class="img-responsive">
+        @endif
+
 	</div>
 	@endif
 

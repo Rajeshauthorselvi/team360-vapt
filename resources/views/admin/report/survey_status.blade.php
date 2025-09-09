@@ -12,18 +12,16 @@
             <div class="panel-body">
 
                 @if (count($survey_details) > 0)
-                    {!! Form::open([
-                        'route' => ['export.status_report', 'survey_id=' . $survey_id, 'survey_name=' . $survey_name],
-                        'method' => 'POST',
-                        'class' => 'form-horizontal',
-                    ]) !!}
+                    <form method="POST" action="{{ route('export.status_report', ['survey_id' => $survey_id, 'survey_name' => $survey_name]) }}" class="form-horizontal">
+                        @csrf
 
-                    <div class="pull-right">
-                        <button type="submit" name="button" class="btn btn-primary"><span
-                                class="glyphicon glyphicon-download-alt"></span> Download <span
-                                class="fa fa-file-excel-o"></span></button>
-                    </div>
-                    {!! Form::close() !!}
+                        <div class="pull-right">
+                            <button type="submit" name="button" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-download-alt"></span> Download
+                                <span class="fa fa-file-excel-o"></span>
+                            </button>
+                        </div>
+                    </form>
                     <br>
                     <br>
                     <br>
@@ -86,24 +84,24 @@
                                         ?>
                                     </td>
                                     @if ($user_details->notify_email_date)
-                                        <td>{!! HTML::image('images/calendar-icon.png') .
-                                            ' ' .
-                                            date('d/m/Y', strtotime($user_details->notify_email_date)) .
-                                            ' ' .
-                                            HTML::image('images/time-icon.png') .
-                                            ' ' .
-                                            date('g:i:A', strtotime($user_details->notify_email_date)) !!} </td>
+                                        <td>
+                                            <img src="{{ asset('images/calendar-icon.png') }}" alt="Calendar Icon">
+                                            {{ date('d/m/Y', strtotime($user_details->notify_email_date)) }}
+                                            <img src="{{ asset('images/time-icon.png') }}" alt="Time Icon">
+                                            {{ date('g:i:A', strtotime($user_details->notify_email_date)) }}
+
+                                        </td>
                                     @else
                                         <td class="text-center">-</td>
                                     @endif
                                     @if ($user_details->last_submitted_date)
-                                        <td class="last_submitted_date"> {!! HTML::image('images/calendar-icon.png') .
-                                            ' ' .
-                                            date('d/m/Y', strtotime($user_details->last_submitted_date)) .
-                                            ' ' .
-                                            HTML::image('images/time-icon.png') .
-                                            ' ' .
-                                            date('H:i:A', strtotime($user_details->last_submitted_date)) !!}</td>
+                                        <td class="last_submitted_date">
+                                            <img src="{{ asset('images/calendar-icon.png') }}" alt="Calendar Icon">
+                                            {{ date('d/m/Y', strtotime($user_details->last_submitted_date)) }}
+                                            <img src="{{ asset('images/time-icon.png') }}" alt="Time Icon">
+                                            {{ date('H:i:A', strtotime($user_details->last_submitted_date)) }}
+
+                                        </td>
                                     @else
                                         <td class="last_submitted_date text-center">-</td>
                                     @endif
@@ -137,12 +135,14 @@
             });
         });
     </script>
-    {!! HTML::script('script/dataTable/jquery.dataTables.min.js') !!}
-    {!! HTML::style('css/dataTable/jquery.dataTables.min.css') !!}
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="{{ asset('css/dataTable/jquery.dataTables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/dataTable/dataTables.bootstrap4.min.css') }}">
 
+<!-- DataTables JS -->
+<script src="{{ asset('script/dataTable/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
 
-    {!! HTML::script('js/dataTables.bootstrap4.min.js') !!}
-    {!! HTML::style('css/dataTable/dataTables.bootstrap4.min.css') !!}
 
     <script type="text/javascript">
         $(document).ready(function() {

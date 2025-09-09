@@ -14,13 +14,13 @@
                 @if (count($responses) > 0)
                     <div class="pull-right">
 
-                        <span class="btn btn-primary">{!! html_entity_decode(
-                            link_to_route(
-                                'text_response_ques.ques_export',
-                                '<span class="glyphicon glyphicon-download-alt"></span> Download Questions <span class="fa fa-file-excel-o" aria-hidden="true"></span>',
-                                ['survey_id=' . $survey_id, 'survey_name=' . $survey_name],
-                            ),
-                        ) !!}</span>
+                        <span class="btn btn-primary">
+                            <a href="{{ route('text_response_ques.ques_export', ['survey_id' => $survey_id, 'survey_name' => $survey_name]) }}">
+                                <span class="glyphicon glyphicon-download-alt"></span>
+                                Download Questions
+                                <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+                            </a>
+                        </span>
 
                         <button type="submit" class="btn btn-primary" id="submit"><span
                                 class="glyphicon glyphicon-download-alt"></span> Download <span class="fa fa-file-excel-o"
@@ -30,11 +30,8 @@
                 <div class="col-sm-3">
 
                     @if (count($filter_participants) > 0)
-                        {!! Form::open([
-                            'route' => ['post.text_response', 'survey_id=' . $survey_id],
-                            'method' => 'POST',
-                            'class' => 'form-horizontal',
-                        ]) !!}
+                    <form method="POST" action="{{ route('post.text_response', ['survey_id' => $survey_id]) }}" class="form-horizontal">
+                        @csrf
 
 
                         <select name="users[]" multiple class="users">
@@ -44,7 +41,8 @@
                         </select>
 
                         <button type="submit" name="button" class="btn btn-primary filter">Filter</button>
-                        {!! Form::close() !!}
+
+                    </form>
                     @endif
                 </div>
                 <br>
@@ -102,7 +100,7 @@
                                         <?php
                                         if ($response->respondent_id != 0) {
                                             $f_l_name = DB::table('users')->selectRaw('GROUP_CONCAT(COALESCE(CONCAT(fname, " ", lname), fname)) AS user_name')->where('id', $response->participant_id)->value('user_name');
-                                            
+
                                         } else {
                                             $f_l_name = $response->fname.' '.$response->lname;
                                         }
@@ -142,11 +140,14 @@
             </div>
         </div>
     </div>
-    {!! HTML::script('script/dataTable/jquery.dataTables.min.js') !!}
-    {!! HTML::style('css/dataTable/jquery.dataTables.min.css') !!}
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="{{ asset('css/dataTable/jquery.dataTables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/dataTable/dataTables.bootstrap4.min.css') }}">
 
-    {!! HTML::script('js/dataTables.bootstrap4.min.js') !!}
-    {!! HTML::style('css/dataTable/dataTables.bootstrap4.min.css') !!}
+<!-- DataTables JS -->
+<script src="{{ asset('script/dataTable/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+
 
     <script type="text/javascript">
         $(document).ready(function() {

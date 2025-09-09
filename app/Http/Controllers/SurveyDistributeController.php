@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\EmailTemplate;
+use App\Models\EmailTemplate;
 use DB;
 use Illuminate\Http\Request;
 use Mail;
 use Redirect;
 use Str;
-
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Log;
 class SurveyDistributeController extends Controller
 {
 
@@ -184,13 +185,13 @@ class SurveyDistributeController extends Controller
                 unset($rater_content);
                 $content = '';
 
-/*  if ($request->get('send_email')=="remainder-respondent" || $request->get('send_email')=="notification-respondent") {
-$content='<b>You have been invited to respond to a 360° Feedback Survey for:</b>';
-}
-else{
-$content='<b>Yourself</b><br>';
-}
- */
+                /*  if ($request->get('send_email')=="remainder-respondent" || $request->get('send_email')=="notification-respondent") {
+                $content='<b>You have been invited to respond to a 360° Feedback Survey for:</b>';
+                }
+                else{
+                $content='<b>Yourself</b><br>';
+                }
+                */
             } else {
 
                 $rater_details = '';
@@ -232,30 +233,30 @@ $content='<b>Yourself</b><br>';
             $data['subject'] =$subject_body;
             $replay_to=$request->replay_to;
             $sender_name = isset($survey_details->sender_name)?$survey_details->sender_name:'Survey Support';
-            Mail::send(['html' => 'admin.distribute.sendemail'], $data, function ($message) use ($data, $file_name, $sender_name,$replay_to) {
-                $message->from($data['from_email'], $sender_name);
-                $message->to($data['send_email']);
 
-                if (!empty($data['cc'])) {
-                    $message->cc($data['cc']);
-                }
-                if (!empty($data['copy_email'])) {
-                    $message->bcc($data['copy_email']);
-                }
-                $message->subject($data['subject']);
+            try {
+                Mail::send(['html' => 'admin.distribute.sendemail'], $data, function ($message) use ($data, $file_name, $sender_name,$replay_to) {
+                    $message->from($data['from_email'], $sender_name);
+                    $message->to($data['send_email']);
 
-                if (isset($replay_to)) {
-                    $message->replyTo($replay_to);
-                }
-                if (isset($file_name)) {
-                    if ($file_name != '') {
-                        $message->attach(public_path('documents/' . $file_name));
+                    if (!empty($data['cc'])) {
+                        $message->cc($data['cc']);
                     }
-                }
+                    if (!empty($data['copy_email'])) {
+                        $message->bcc($data['copy_email']);
+                    }
+                    $message->subject($data['subject']);
 
-            });
+                    if (isset($replay_to)) {
+                        $message->replyTo($replay_to);
+                    }
+                    if (isset($file_name)) {
+                        if ($file_name != '') {
+                            $message->attach(public_path('documents/' . $file_name));
+                        }
+                    }
 
-            if (count(Mail::failures()) == 0) {
+                });
 
                 date_default_timezone_set('Asia/Kolkata');
                 $currenttime = date('Y-m-d H:i:s');
@@ -289,9 +290,9 @@ $content='<b>Yourself</b><br>';
                 DB::table('users')->where('id', $userid)->update(['password' => encrypt($password)]);
 
                 $error_info['mailsent'][] = $value;
-                // $userinfo=DB::table('users')->find($userid);
-            } else {
-                $error_info['mail_failed'][] = $value;
+
+            } catch (TransportExceptionInterface $e) {
+                Log::error($e->getMessage());
             }
 
         }

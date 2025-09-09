@@ -2,8 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\UserSurvey;
-use App\UserSurveyQuestion;
+use App\Models\UserSurvey;
+use App\Models\UserSurveyQuestion;
 use Auth;
 use DB;
 use Hash;
@@ -57,7 +57,7 @@ class UserController extends Controller
 
         $survey_id = config('site.survey_id');
 
-       
+
 
         $rater = (isset($input['rater'])) ? $input['rater'] : 0;
         $participant_id = (isset($input['participant'])) ? $input['participant'] : 0;

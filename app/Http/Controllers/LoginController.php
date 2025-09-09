@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\User;
 use Auth;
 use DB;
 use Hash;
@@ -45,12 +45,12 @@ class LoginController extends Controller
     public function post_login(Request $request)
     {
 
-
         $rules = [
             'email' => 'required|email',
             'password' => 'required',
 
         ];
+        $messages=[];
         if (env('APP_ENV')=="production"){
             $rules['g-recaptcha-response'] = 'required';
             $messages = [
@@ -67,8 +67,11 @@ class LoginController extends Controller
                 Session::put('survey_url', $survey_url);
             }
         }
+        $input = $request->all();
+        $input['email'] = strip_tags($input['email']);
+        $input['password'] = strip_tags($input['password']);
 
-        $validation = Validator::make($request->all(), $rules,$messages);
+        $validation = Validator::make($input, $rules,$messages);
 
         if ($validation->passes()) {
 
@@ -99,7 +102,6 @@ class LoginController extends Controller
                     $decrypted = decrypt($user->password);
                 } catch (DecryptException $e) {
                     $decrypted = '';
-                    // die($e->getMessage());
                 }
                 if ($input['password'] == $decrypted) {
                     Auth::login($user);

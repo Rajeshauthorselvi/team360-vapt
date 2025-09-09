@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\UserSurvey;
+use App\Models\UserSurvey;
 use Validator;
 use Auth;
 use Hash;
 use DB;
 use Session;
 use Carbon\Carbon;
-use App\User;
+use App\Models\User;
 use Arr;
 use Illuminate\Routing\Redirector;
 use Http;
@@ -102,6 +102,7 @@ class UserSurveyController extends Controller
          'email'=>'required|email',
          'password'=>'required'
         ];
+        $messages=[];
         if (env('APP_ENV')=="production"){
             $rules['g-recaptcha-response'] = 'required';
             $messages = [

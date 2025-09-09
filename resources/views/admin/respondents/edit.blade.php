@@ -28,7 +28,7 @@
 
                         {{ Form::label('title', 'First Name', ['class' => 'col-sm-2 ']) }}
                         <div class="col-sm-10">
-                            {{ Form::text('fname', null, ['class' => 'form-control', 'placeholder' => 'First Name']) }}
+                            {{ Form::text('fname', null, ['class' => 'form-control', 'placeholder' => 'First Name','oninput'=>'sanitizeInput(this)']) }}
                         </div>
 
                     </div>
@@ -36,7 +36,7 @@
 
                         {{ Form::label('title', 'Last Name', ['class' => 'col-sm-2 ']) }}
                         <div class="col-sm-10">
-                            {{ Form::text('lname', null, ['class' => 'form-control', 'placeholder' => 'Last Name']) }}
+                            {{ Form::text('lname', null, ['class' => 'form-control', 'placeholder' => 'Last Name','oninput'=>'sanitizeInput(this)']) }}
                         </div>
 
                     </div>

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Addusers;
+use App\Models\Addusers;
 use App\Imports\ParticipantImport;
-use App\Survey_rater;
+use App\Models\Survey_rater;
 use Arr;
 use Auth;
 use Excel;
@@ -176,7 +176,7 @@ class AddusersController extends Controller
     public function update(Request $request, $id)
     {
 
-        $this->validate($request, [
+        $request->validate( [
             'email' => 'email',
         ]);
         $survey_id = $request->get('survey_id');

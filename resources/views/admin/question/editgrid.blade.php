@@ -1,228 +1,232 @@
-
- <div id="questionedit-modal" class="modal fade" role="dialog">
-
-
-
-                            <div class="modal-dialog modal-lg">
+<div id="questionedit-modal" class="modal fade" role="dialog">
 
 
 
-                              <!-- Modal content-->
-
-                              <div class="modal-content">
+    <div class="modal-dialog modal-lg">
 
 
 
-                      <form role="form" id="qedit-form">         
+        <!-- Modal content-->
 
-                   <div class="modal-body">
+        <div class="modal-content">
 
 
-                   <input type="hidden" name="question_type" value="grid">
-                   <input type="hidden" name="display_order" value="{{$display_order}}">
-                   <input type="hidden" name="survey_id" value="{{$survey_id}}">
-                  
-                   <input type="hidden" name="_method" value="POST">
-                   <input type="hidden" name="_token" value="{{csrf_token()}}">
 
-                   <div class="form-group">
-                   <label class="col-sm-3">Question Dimension</label> 
-                   <div class="col-sm-8">
-                  {{Form::text('question_dimension',$question_dimension,['class'=>'form-control'])}}
-                   </div></div>
-<?php $count=1; $q_ids=[];?>
-@foreach ($questions as $key => $question)
+            <form role="form" id="qedit-form">
 
-                   <div class="form-group">
-                   <label class="col-sm-3 lab-question">Statement  {{$count}}<span class="qtn-required">*</span></label> 
-                   <div class="col-sm-8">
-                  
-                   {{Form::textarea('question[]',$question->question_text,['class'=>'form-control','rows'=>1])}}
-                   
-                   </div>
+                <div class="modal-body">
 
-                   @if($key>0)
-                  
-                   <div class="col-sm-1 ">
-                        <a href="javascript:void(0);" class="btn btn-danger btn-addq" type="button"> <span class="glyphicon glyphicon-minus"></span> </a> 
+
+                    <input type="hidden" name="question_type" value="grid">
+                    <input type="hidden" name="display_order" value="{{$display_order}}">
+                    <input type="hidden" name="survey_id" value="{{$survey_id}}">
+
+                    <input type="hidden" name="_method" value="POST">
+                    <input type="hidden" name="_token" value="{{csrf_token()}}">
+
+                    <div class="form-group">
+                        <label class="col-sm-3">Question Dimension</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="question_dimension" value="{{ $question_dimension }}"
+                                class="form-control">
                         </div>
-                   @endif
-                   </div>
-
-  
- <?php $q_ids[]=$question->id ;$count++;?>
- @endforeach
- {{Form::hidden('qqcount',--$count,['id'=>'qqcount'])}}
-                 <div class="form-group" id="questionTemplate">
-   <div class="col-sm-12">
-     <a href="#" class="addQButton btn btn-primary pull-right" title="Add field"><span class="glyphicon glyphicon-plus">Add</span></a>
-   </div>
- </div>
- <?php $q_ids=(count($q_ids)>0) ? implode(",", $q_ids) : ""; ?>
-       <input type="hidden" name="question_id" value="{{$q_ids}}">           
-               @foreach ($options as $key => $qoption)
-                    @if($key==0) 
-                  <div class="form-group no-margin">
-              <label class="control-label col-sm-6" for="field1">Choices</label>
-              <div class="controls col-sm-6"> 
-              
-              <div class="field_wrapper">
-
-              <div class="no-left-pad">
-              <label>Option Text</label>
-                        <input class="form-control shrink" name="fields[]" value="{{$qoption->option_text}}" type="text" />
-
                     </div>
+                    <?php $count=1; $q_ids=[];?>
+                    @foreach ($questions as $key => $question)
 
-                  
-                    
-                    </div>
-         
-            </div>
-        </div>
-
-
-        <div class="form-group no-margin">
-          <div class="controls col-sm-12"> 
-              
-              <div class="field_wrapper">
-            <div class="col-sm-6 no-right-pad">
-                    <label>Option Weight</label>
-                        <input class="form-control shrink" name="option_weight[]" value="{{$qoption->option_weight}}" type="text" />
-
-                     </div>
-        </div></div></div>
-        @else
-
-         <div class="form-group no-margin">
-              
-              <div class="controls col-sm-6 col-sm-offset-6"> 
-              
-              <div class="field_wrapper">
-
-              <div class="no-left-pad">
-                        <input class="form-control shrink" name="fields[]" value="{{$qoption->option_text}}" type="text" />
-
-                    </div>
-
-                  
-                    
-                    </div>
-         
-            </div>
-        </div>
-
-
-        <div class="form-group no-margin">
-          <div class="controls col-sm-12"> 
-              
-              <div class="field_wrapper">
-            <div class="col-sm-6 no-right-pad">
-       
-                        <input class="form-control shrink" name="option_weight[]" value="{{$qoption->option_weight}}" type="text" />
-                        <input type="hidden" value="{{$qoption->option_weight}}" name="option_weight_count" class="option_weight_count">
-                     </div>
-
-                       <div class="col-sm-2 col-sm-offset-4 no-pad">
-                        <a href="javascript:void(0);" class="btn btn-danger btn-add removeButton" type="button"> <span class="glyphicon glyphicon-minus"></span> </a> 
+                    <div class="form-group">
+                        <label class="col-sm-3 lab-question">Statement {{$count}}<span
+                                class="qtn-required">*</span></label>
+                        <div class="col-sm-8">
+                            <textarea name="question[]" class="form-control"
+                                rows="1">{{ $question->question_text }}</textarea>
                         </div>
-        </div></div></div>
 
-        
-         @endif
-         @endforeach
-                 
+                        @if($key>0)
 
-<div class="form-group no-margin" id="optionTemplate">
-   <div class="col-sm-12">
-     <a href="#" class="addButton btn btn-primary pull-right" title="Add field"><span class="glyphicon glyphicon-plus">Add</span></a>
-   </div>
- </div>
-
-
- 
-                   <div class="form-group">
-                   <label class="col-sm-3">Question Required<span class="qtn-required">*</span></label>
-                   <div class="col-sm-9">
-
-                    <?php 
-                   $qtny=$qtnn=0;
-                   if($question_required) $qtny=1;
-                   else $qtnn=1;
-                   ?>
-
-                    {{Form::radio('question_required',1,$qtny,['id'=>'qreqy'])}} 
-                    {{Form::label('qreqy','Yes ')}}
-
-                    {{Form::radio('question_required',0,$qtnn,['id'=>'qreqn'])}} 
-                    {{Form::label('qreqn','No ')}}
-                   
-                   </div></div>
-
-
-
-                
-               
-
-                                
-                          
-                                  
+                        <div class="col-sm-1 ">
+                            <a href="javascript:void(0);" class="btn btn-danger btn-addq" type="button"> <span
+                                    class="glyphicon glyphicon-minus"></span> </a>
+                        </div>
+                        @endif
                     </div>
 
 
+                    <?php $q_ids[]=$question->id ;$count++;?>
+                    @endforeach
+                    <input type="hidden" name="qqcount" value="{{ --$count }}" id="qqcount">
+                    <div class="form-group" id="questionTemplate">
+                        <div class="col-sm-12">
+                            <a href="#" class="addQButton btn btn-primary pull-right" title="Add field"><span
+                                    class="glyphicon glyphicon-plus">Add</span></a>
+                        </div>
+                    </div>
+                    <?php $q_ids=(count($q_ids)>0) ? implode(",", $q_ids) : ""; ?>
+                    <input type="hidden" name="question_id" value="{{$q_ids}}">
+                    @foreach ($options as $key => $qoption)
+                    @if($key==0)
+                    <div class="form-group no-margin">
+                        <label class="control-label col-sm-6" for="field1">Choices</label>
+                        <div class="controls col-sm-6">
 
-                                <div class="modal-footer">
+                            <div class="field_wrapper">
 
-                                <button type="button" class="btn btn-danger cancel" id="revert" data-dismiss="modal">Cancel</button>
+                                <div class="no-left-pad">
+                                    <label>Option Text</label>
+                                    <input class="form-control shrink" name="fields[]" value="{{$qoption->option_text}}"
+                                        type="text" />
+                                </div>
+                            </div>
 
-                                <button type="submit" id="questionedit-submit-btnn" class="btn btn-success" >Save</button>
+                        </div>
+                    </div>
 
-                                {{HTML::Image("images/img_load.gif","ajax_load",["class"=>"load-ajximage"])}}
 
+                    <div class="form-group no-margin">
+                        <div class="controls col-sm-12">
+
+                            <div class="field_wrapper">
+                                <div class="col-sm-6 no-right-pad">
+                                    <label>Option Weight</label>
+                                    <input class="form-control shrink" name="option_weight[]"
+                                        value="{{$qoption->option_weight}}" type="text" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @else
+
+                    <div class="form-group no-margin">
+
+                        <div class="controls col-sm-6 col-sm-offset-6">
+
+                            <div class="field_wrapper">
+
+                                <div class="no-left-pad">
+                                    <input class="form-control shrink" name="fields[]" value="{{$qoption->option_text}}"
+                                        type="text" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group no-margin">
+                        <div class="controls col-sm-12">
+
+                            <div class="field_wrapper">
+                                <div class="col-sm-6 no-right-pad">
+
+                                    <input class="form-control shrink" name="option_weight[]"
+                                        value="{{$qoption->option_weight}}" type="text" />
+                                    <input type="hidden" value="{{$qoption->option_weight}}" name="option_weight_count"
+                                        class="option_weight_count">
                                 </div>
 
-                             {{Form::close()}}
-
-                              </div>
-
-                          
-
+                                <div class="col-sm-2 col-sm-offset-4 no-pad">
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-add removeButton"
+                                        type="button"> <span class="glyphicon glyphicon-minus"></span> </a>
+                                </div>
                             </div>
-                           
+                        </div>
+                    </div>
+
+
+                    @endif
+                    @endforeach
+
+
+                    <div class="form-group no-margin" id="optionTemplate">
+                        <div class="col-sm-12">
+                            <a href="#" class="addButton btn btn-primary pull-right" title="Add field"><span
+                                    class="glyphicon glyphicon-plus">Add</span></a>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-sm-3">Question Required<span class="qtn-required">*</span></label>
+                        <div class="col-sm-9">
+                            <?php
+                                $qtny=$qtnn=0;
+                                if($question_required) $qtny=1;
+                                else $qtnn=1;
+                            ?>
+                            <input type="radio" name="question_required" value="1" id="qreqy" {{ $qtny ? 'checked' : ''
+                                }}>
+                            <label for="qreqy">Yes</label>
+
+                            <input type="radio" name="question_required" value="0" id="qreqn" {{ $qtnn ? 'checked' : ''
+                                }}>
+                            <label for="qreqn">No</label>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-danger cancel" id="revert" data-dismiss="modal">Cancel</button>
+
+                    <button type="submit" id="questionedit-submit-btnn" class="btn btn-success">Save</button>
+
+                    <img src="{{ asset('images/img_load.gif') }}" alt="ajax_load" class="load-ajximage">
+
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+    </div>
+
 </div>
 
 
 <style type="text/css">
-	.form-group {
-    display: inline-block;
-    position: relative;
-    width: 100%;
-}
-.form-group.no-margin{float: left;width: 50%;}
-.no-left-pad {
-    padding-left: 0;
-}
-.no-right-pad {
-    padding-right: 0;
-}
-.no-pad {
-    padding: 0;
-}
-#optionTemplate {
-    clear: both;
-    width: 100%;
-}
-.col-sm-1.col-sm-offset-11 {
-    margin-top: 5px;
-}
+    .form-group {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+    }
+
+    .form-group.no-margin {
+        float: left;
+        width: 50%;
+    }
+
+    .no-left-pad {
+        padding-left: 0;
+    }
+
+    .no-right-pad {
+        padding-right: 0;
+    }
+
+    .no-pad {
+        padding: 0;
+    }
+
+    #optionTemplate {
+        clear: both;
+        width: 100%;
+    }
+
+    .col-sm-1.col-sm-offset-11 {
+        margin-top: 5px;
+    }
 </style>
 <script type="text/javascript">
-
-
-
-$(document).keyup(function(e) {
-     if (e.keyCode == 27) { 
- $('.cancel').click(); 
+    $(document).keyup(function(e) {
+     if (e.keyCode == 27) {
+ $('.cancel').click();
     }
 });
 
@@ -269,8 +273,8 @@ $(document).ready(function(){
 
                     }
                 };
-            
-            
+
+
 
 	$('#qedit-form').bootstrapValidator({
             framework: 'bootstrap',
@@ -313,7 +317,7 @@ $(document).ready(function(){
             // Add button click handler
         .on('click', '.addQButton', function() {
 
-          var count=parseInt($('#qqcount').val())+1;  
+          var count=parseInt($('#qqcount').val())+1;
           $('#qqcount').val(count);
 
             var $template = $('#questionTemplate'),
@@ -327,16 +331,16 @@ $(document).ready(function(){
                 // Add new field
                 $('#qedit-form').bootstrapValidator('addField', $option);
 
-                 
+
         })
           // Remove button click handler
         .on('click', '.btn-addq', function() {
-          var count=parseInt($('#qqcount').val())-1;  
+          var count=parseInt($('#qqcount').val())-1;
           $('#qqcount').val(count);
 
             var $row    = $(this).parents('.form-group'),
                 $option = $row.find('[name="question[]"]');
-                 
+
             // Remove element containing the option
             $row.remove();
 
@@ -365,7 +369,7 @@ $(document).ready(function(){
             $('#qedit-form').bootstrapValidator('removeField', $option);
 
 
-              
+
 
             // Remove element containing the option
             $row2.remove();
@@ -410,9 +414,9 @@ $(document).ready(function(){
 					              $('.load-image').hide();
 					          },
 					          success:function(data){
-                    
-                      
-                        if(data.question_id) 
+
+
+                        if(data.question_id)
                       {
                          $('#fields li').each(function(){
 
@@ -425,7 +429,7 @@ $(document).ready(function(){
                                   $(this).find('.response-label-db').html(data.question_text);
 
                                   $(this).find('.question-dimension-section').html(data.question_dimension);
-                                
+
                           $(this).tooltip('hide').attr('data-original-title', data.question_dimension).tooltip('fixTitle').tooltip('show');
                           $('.response-area-db').tooltip();
                                    $('#questionedit-modal').modal('hide');
@@ -442,15 +446,15 @@ $(document).ready(function(){
                       }
 
 
-										
 
-					          	
+
+
 					          }
 
 					      });
-			      } 
-			    
-			  
+			      }
+
+
         });
         });
 

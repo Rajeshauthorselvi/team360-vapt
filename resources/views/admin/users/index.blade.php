@@ -183,7 +183,6 @@
                                                             style="color:#337ab7"></span><span style="word-spacing: 0px">
                                                             Manage</span></a>
 
-                                                    <!--  {!! html_entity_decode(link_to_route('respondent.show', ' <span class="glyphicon glyphicon-user  " style="color:#2041BD"></span><span class="glyphicon glyphicon-user  " style="color:#2041BD"></span> Respondents/Rater', ['' . $result->id])) !!}  -->
                                                 </td>
                                                 <td width="20%">
 
@@ -196,39 +195,21 @@
                                                             data-toggle="tooltip" title="Resend Access"
                                                             class="btn btn-info"><span class="fa fa-refresh"></span></a>
                                                     @endif
-                                                    <?php $count_responses = DB::table('responses')
-                                                        ->where('user_survey_respondent_id', $result->user_survey_respondent_id)
-                                                        ->count(); ?>
-                                                    <form class="form-horizontal form-reopen-survey" role="form" method="GET"
-                                                        action="{{ action('AddusersController@Reopen_survey') }}">
-                                                        {{ csrf_field() }}
+                                                    <?php
 
-                                                        <input type="hidden" name="survey_id" value="<?= $survey_id ?>">
-                                                        <input type="hidden" name="participant_id"
-                                                            value="<?= $result->id ?>">
-                                                        @if ($count_responses > 0)
+                                                        $count_responses = DB::table('responses')
+                                                        ->where('user_survey_respondent_id', $result->user_survey_respondent_id)
+                                                        ->count();
+                                                    ?>
+                                                        @if ($result->survey_status == 3)
                                                         <a  class="reopen-survey btn btn-info" data-toggle="tooltip" title="Reopen Survey" href="javascript::void(0)" att-href="{{ route('addusers.Reopen_survey',['survey_id'=>$survey_id,'participant_id'=>$result->id]) }}">
                                                             <span class="fa fa-repeat"></span>
                                                         </a>
-                                                            {{-- <button class="reopen-survey btn btn-info" type="button"
-                                                                data-toggle="tooltip" title="Reopen Survey"><span
-                                                                    class="fa fa-repeat"></span></button> --}}
                                                         @endif
-                                                    </form>
 
-                                                    {{-- <form class="form-horizontal" role="form" method="GET"
-                                                        action="{{ action('AddusersController@Clear_response') }}">
-                                                        {{ csrf_field() }}
 
-                                                        <input type="hidden" name="survey_id" value="<?= $survey_id ?>">
-                                                        <input type="hidden" name="participant_id"
-                                                            value="<?= $result->id ?>">
-                                                        @if ($count_responses > 0)
-                                                            <button class="clear-response btn btn-info" type="button"
-                                                                data-toggle="tooltip" title="Clear Response"><span
-                                                                    class="fa fa-remove"></span></button>
-                                                        @endif
-                                                    </form> --}}
+
+
                                                     @if ($count_responses > 0)
                                                         <a href="javascript:void(0)"  class="clear-response btn btn-info" attr-href="{{ route('addusers.Clear_response',['survey_id'=>$survey_id,'participant_id'=>$result->id]) }}"><span class="fa fa-remove"></span></a>
                                                     @endif
@@ -245,18 +226,17 @@
                                                         ->count();
 
                                                     ?>
-                                                    {!! Form::open(['method' => 'DELETE', 'route' => ['addusers.destroy', $result->id], 'class' => 'del_form']) !!}
-                                                    {{ Form::hidden('survey_id', $survey_id) }}
-                                                    @if ($count > 0 || $count_respondent > 0)
-                                                        {{ Form::hidden('check_response_data', 'true', ['class' => 'check_response_data']) }}
-                                                    @else
-                                                        {{ Form::hidden('check_response_data', 'false', ['class' => 'check_response_data']) }}
-                                                    @endif
+                                                    <form method="POST" action="{{ route('addusers.destroy', $result->id) }}" class="del_form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+                                                        <input type="hidden" name="check_response_data" value="{{ ($count > 0 || $count_respondent > 0) ? 'true' : 'false' }}" class="check_response_data">
 
-                                                    <button class="delete-user-survey btn btn-danger" type="button"
-                                                        data-toggle="tooltip" title="Delete"><span
-                                                            class="fa fa-trash-o"></span></button>
-                                                    {!! Form::close() !!}
+                                                        <button type="button" class="delete-user-survey btn btn-danger" data-toggle="tooltip" title="Delete">
+                                                            <span class="fa fa-trash-o"></span>
+                                                        </button>
+                                                    </form>
+
 
                                                 </td>
 
@@ -273,7 +253,7 @@
                         </form>
                         <div class="text-center col-sm-12" style="margin-top: 20px;">
 
-                            {{ Form::hidden('survey_id', $survey_id) }}
+                            <input type="hidden" name="survey_id" value="{{ $survey_id }}">
 
                             <?php
                             $back_url = URL::route('theme.show', $survey_id);
@@ -293,14 +273,15 @@
 
     </div>
 
-    {!! HTML::script('script/dataTable/jquery.dataTables.min.js') !!}
-    {!! HTML::style('css/dataTable/jquery.dataTables.min.css') !!}
-    {{ HTML::script('script/sweetalert.min.js') }}
-    {{ HTML::style('css/sweetalert.css') }}
+    <script src="{{ asset('script/dataTable/jquery.dataTables.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/dataTable/jquery.dataTables.min.css') }}">
 
+    <script src="{{ asset('script/sweetalert.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/sweetalert.css') }}">
 
-    {!! HTML::script('js/dataTables.bootstrap4.min.js') !!}
-    {!! HTML::style('css/dataTable/dataTables.bootstrap4.min.css') !!}
+    <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/dataTable/dataTables.bootstrap4.min.css') }}">
+
 
     <script type="text/javascript">
         /*Select User Checkbox Actions */
