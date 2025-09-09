@@ -7,11 +7,12 @@
 <div class="container bootstrap snippet">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
-           {!! Form::open(['route' =>['user_login',config('site.survey_slug')],'Method'=>'POST','class'=>'form-horizontal','id'=>'user-login','name'=>'userform']) !!}
+            <form method="POST" action="{{ route('user_login', config('site.survey_slug')) }}" class="form-horizontal" id="user-login" name="userform">
+                @csrf
             <div class="panel panel-info  login-box">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        Login   
+                        Login
                     </h3>
                 </div>
                 <div class="panel-body">
@@ -24,20 +25,20 @@
                         @endforeach
                        </div>
                       @endif
-                      
+
                         <div class="form-group">
                             <div class="input-group">
-                                {!! Form::email('email',null,['class'=>'form-control','id'=>'email','placeholder'=>'Email','autocomplete'=>'off']) !!}
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Email" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                                {!! Form::password('password',['class'=>'form-control','id'=>'password','placeholder'=>'Password','autocomplete'=>'off']) !!}
+                                <input type="password" name="password" class="form-control" id="password" placeholder="Password" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                                
+
                                 <button class="btn icon-btn-save btn-submit" type="submit">
                                 <span class="btn-save-label"></span>Login</button>
                                 <a class="pull-right" href="#" data-target="#pwdModal" data-toggle="modal">Forgot my password ?</a>
@@ -47,7 +48,7 @@
                     </div>
                 </div>
             </div>
-            {!! Form::close() !!}
+            </form>
         </div>
     </div>
 </div>

@@ -6,16 +6,16 @@
  <div class="row ">
 <div class="col-xs-12 col-sm-12 col-md-12 list-page">
 
- 
+
   <h3 class="need-margin-bottom-forstrip text-center">{{$title}}</h3>
-               
+
     @if ($errors->any())
       <div class="alert alert-danger fade in">
           <a href="#" class="close" data-dismiss="alert">&times;</a>
           <strong>Error!</strong> A problem has been occurred while submitting form.<br>
           <ul> {!! implode('', $errors->all('<li class="text-danger">:message</li>')) !!}</ul>
       </div>
-     @endif 
+     @endif
 
     <div class="action-panel pull-right">
       <a href="{{ route('manage-respondent.create',[config('site.survey_slug')]) }}" class="btn btn-submit"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New</a>
@@ -31,7 +31,7 @@
         @elseif(Session::get("mess_data")=='error')
         <div class="alert alert-danger alert-dismissable" style="clear: both;">
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          <strong>Error!</strong> 
+          <strong>Error!</strong>
           <ul class="list-unstyled">
               @foreach(Session::get('msg') as $error)
                 <li>{{$error}} </li>
@@ -43,7 +43,7 @@
   @endif
 
     @if(Session::has('mailstatus'))
-    <?php 
+    <?php
     $mailstatus=Session::get("mailstatus"); ?>
     @if(count($mailstatus)==0)
     <div class="alert alert-success alert-dismissable" style="clear: both;">
@@ -58,22 +58,22 @@
     @endif
     @endif
    @if(Session::has('reopen_survey_message'))
-  
+
     <div class="alert alert-success alert-dismissable" style="clear: both;">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Survey Reopened successfully!</strong> 
+    <strong>Survey Reopened successfully!</strong>
     </div>
       @endif
    @if(Session::has('clear_response_message'))
-  
+
     <div class="alert alert-success alert-dismissable" style="clear: both;">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Response cleared successfully!</strong> 
+    <strong>Response cleared successfully!</strong>
     </div>
 
       @endif
-      
-                          
+
+
     <div>
     <table id="stable"  class="survey-table text-center">
     <thead>
@@ -126,20 +126,20 @@
               <a href="{{ route('resend.resendaccess',['respondent_id'=>$result->id,'survey_id'=>$survey_id]) }}" data-toggle="tooltip" title="Resend Access" class="btn btn-info icon_symbol"><span class="fa fa-refresh"></span></a>
               @endif
 
-   
+
               <form class="form-inline" role="form" method="GET" action="{{URL::route('manage-respondent.show',[config('site.survey_slug'),0])}}">
               <input type="hidden" name="survey_id" value="<?= $survey_id?>">
                <input type="hidden" name="action" value="reopensurvey">
-                                 
+
               <input type="hidden" name="respondent_id" value="<?= $result->id?>">
               @if($result->rcount > 1)
               <button class="reopen-survey btn btn-info icon_symbol" type="button" data-toggle="tooltip" title="Reopen Survey"><span class="fa fa-repeat"></span></button>
               @endif
               </form>
-                	
-                   
+
+
               <form class="form-clear" role="form" method="GET" action="{{URL::route('manage-respondent.show',[config('site.survey_slug'),0])}}">
-            
+
                              <input type="hidden" name="action" value="emptyresponse">
 
               <input type="hidden" name="survey_id" value="<?= $survey_id?>">
@@ -150,25 +150,27 @@
               </form>
 
 
-              {!! Form::open(['method' => 'DELETE','route' => ['manage-respondent.destroy',config('site.survey_slug'),$result->id],'class'=>'del_form']) !!}
-                {{Form::hidden('respondent_id',$result->id)}}
-                {{Form::hidden('survey_id',$survey_id)}}
-                @if($result->rcount > 1)
-                  {{Form::hidden('check_response_data','true',['class'=>'check_response_data'])}}
-                @else
-                  {{Form::hidden('check_response_data','false',['class'=>'check_response_data'])}}
-                @endif
+              <form method="POST" action="{{ route('manage-respondent.destroy', [config('site.survey_slug'), $result->id]) }}" class="del_form">
+                @csrf
+                @method('DELETE')
 
-                  <button class="delete-user-survey btn btn-info icon_symbol " type="button" data-toggle="tooltip" title="Delete" ><span class="fa fa-trash-o"></span></button>
-              {!! Form::close() !!}
-              </span>    
+                <input type="hidden" name="respondent_id" value="{{ $result->id }}">
+                <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+                <input type="hidden" name="check_response_data" value="{{ $result->rcount > 1 ? 'true' : 'false' }}" class="check_response_data">
+
+                <button type="button" class="delete-user-survey btn btn-info icon_symbol" data-toggle="tooltip" title="Delete">
+                    <span class="fa fa-trash-o"></span>
+                </button>
+            </form>
+
+              </span>
               </td>
               <td data-label="" style="border:0px solid transparent;" class="last-child"></td>
                     </tr>
               @endforeach
 
             @else
-             <tr><td class="text-center" colspan="7">No Respondents found!</td></tr>    
+             <tr><td class="text-center" colspan="7">No Respondents found!</td></tr>
             @endif
 
           </table>
@@ -179,11 +181,14 @@
 </div>
 
 
- {{ HTML::script('script/sweetalert.min.js') }}
- {{ HTML::style('css/sweetalert.css') }}
- {!! HTML::script('js/dataTables.bootstrap4.min.js') !!}
- {!! HTML::style('css/dataTable/dataTables.bootstrap4.min.css') !!}
- {!! HTML::script('script/respondent_list.js') !!}
+<script src="{{ asset('script/sweetalert.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/sweetalert.css') }}">
+
+<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/dataTable/dataTables.bootstrap4.min.css') }}">
+
+<script src="{{ asset('script/respondent_list.js') }}"></script>
+
 
 
   <style type="text/css">

@@ -1,84 +1,79 @@
 @extends('Page_Wise.users.layouts.default')
 @section('content')
 <div class="container">
-<div class="row">
-<div class="col-sm-8 col-sm-offset-2">
-<div id="add-manually" class="">
-<!-- <div class="panel panel-info"> -->
-<!-- <div class="panel-heading">
-                    <h3 class="panel-title">
-                         
-                    </h3>
-  </div>
-            -->     
-<h3 class="text-center">{{$title}}</h3>
- @if ($errors->any())
-      <div class="alert alert-danger fade in">
-          <a href="#" class="close" data-dismiss="alert">&times;</a>
-          <strong>Error!</strong> A problem has been occurred while submitting form.<br>
-          <ul> {!! implode('', $errors->all('<li class="text-danger">:message</li>')) !!}</ul>
-      </div>
-     @endif 
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div id="add-manually" class="">
+                <h3 class="text-center">{{ $title }}</h3>
 
-    {!! Form::model($user_details, ['method' => 'PATCH', 'route' =>['manage-respondent.update',config('site.survey_slug'),$user_details->id],'id'=>'add-participants','class'=>'form-horizontal']) !!}
+                @if ($errors->any())
+                <div class="alert alert-danger fade in">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Error!</strong> A problem has occurred while submitting form.<br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li class="text-danger">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
 
-       <div class="form-group col-sm-12">
+                <form method="POST" action="{{ route('manage-respondent.update', [config('site.survey_slug'), $user_details->id]) }}" id="add-participants" class="form-horizontal">
+                    @csrf
+                    @method('PATCH')
 
-        {{Form::label('title','First Name',['class'=>'col-sm-5 col-md-5'])}} 
-        <div class="col-sm-12">
-        {{Form::text('fname',null,['class'=>'form-control','placeholder'=>'First Name'])}}
+                    <div class="form-group col-sm-12">
+                        <label for="fname" class="col-sm-5 col-md-5">First Name</label>
+                        <div class="col-sm-12">
+                            <input type="text" name="fname" value="{{ $user_details->fname }}" class="form-control" placeholder="First Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-sm-12">
+                        <label for="lname" class="col-sm-5 col-md-5">Last Name</label>
+                        <div class="col-sm-12">
+                            <input type="text" name="lname" value="{{ $user_details->lname }}" class="form-control" placeholder="Last Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-sm-12">
+                        <label for="email" class="col-sm-5 col-md-5">Email</label>
+                        <div class="col-sm-12">
+                            <input type="email" name="email" value="{{ $user_details->email }}" class="form-control" placeholder="Email" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-sm-12">
+                        <label for="rater" class="col-sm-7 col-md-5">Rater / Respondent</label>
+                        <div class="col-sm-12">
+                            <select name="rater" class="form-control">
+                                @foreach ($survey_rater_list as $key => $value)
+                                    <option value="{{ $key }}" {{ $key == $rater_id ? 'selected' : '' }}>{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="optionTemplate">
+                        <div class="col-sm-12">
+                            <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+                            <input type="hidden" name="participant_id" value="{{ $participant_details->id }}">
+                            <input type="hidden" name="respondent_id" value="{{ $user_details->id }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-sm-12" align="center">
+                        <a href="{{ route('manage-respondent.index', config('site.survey_slug')) }}" class="btn btn-danger">Cancel</a>
+                        <button type="submit" class="btn btn-submit">Update</button>
+                    </div>
+                </form>
+            </div>
+
         </div>
-        
-        </div>
-        <div class="form-group col-sm-12">
-
-        {{Form::label('title','Last Name',['class'=>'col-sm-5 col-md-5'])}} 
-        <div class="col-sm-12">
-        {{Form::text('lname',null,['class'=>'form-control','placeholder'=>'Last Name'])}}
-        </div>
-        
-        </div>
-        <div class="form-group col-sm-12">
-
-        {{Form::label('title','Email',['class'=>'col-sm-5 col-md-5'])}} 
-        <div class="col-sm-12">
-        {{Form::email('email',null,['class'=>'form-control','placeholder'=>'Email','disabled'=>'true'])}}
-        </div>
-        
-        </div>
-
-       <div class="form-group col-sm-12">
-        {{Form::label('title','Rater / Respondent',['class'=>'col-sm-7 col-md-5'])}} 
-        <div class="col-sm-12">
-        {{Form::select('rater',$survey_rater_list,$rater_id,['class'=>'form-control'])}}
-        </div>
-      </div>
-
-
-  
-
- <div class="form-group" id="optionTemplate">
- <div class="col-sm-12">
- {{Form::hidden('survey_id',$survey_id)}}
- {{Form::hidden('participant_id',$participant_details->id)}}
-  {{Form::hidden('respondent_id',$user_details->id)}}
- </div>
- </div>
- 
-   <div class="form-group col-sm-12" align="center" >
- <a href="{{ route('manage-respondent.index',config('site.survey_slug')) }}" class="btn btn-danger">Cancel</a>
-
-     <button type="submit" class="btn btn-submit">update</button>
-
-       
-   </div>
-      {!! Form::close() !!}
-  </div>
-</div>
-</div>
+    </div>
 </div>
 <script type="text/javascript">
-	  $(document).ready(function(){
+    $(document).ready(function(){
     $('#add-participants')
         .bootstrapValidator({
             framework: 'bootstrap',
@@ -211,18 +206,21 @@
   });
 </script>
 <style type="text/css">
-  footer{
-    position: fixed;
-  }
-#add-manually {
-    margin-bottom: 117px;
-}
-  #add-participants{
-  padding: 10px;
-}
-.form-group.col-sm-12 {
-    padding-left: 46px;
-    margin-top: 10px;
-}
+    footer {
+        position: fixed;
+    }
+
+    #add-manually {
+        margin-bottom: 117px;
+    }
+
+    #add-participants {
+        padding: 10px;
+    }
+
+    .form-group.col-sm-12 {
+        padding-left: 46px;
+        margin-top: 10px;
+    }
 </style>
 @endsection

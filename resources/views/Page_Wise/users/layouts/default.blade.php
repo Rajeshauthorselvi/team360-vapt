@@ -10,18 +10,19 @@
 <link rel="shortcut icon"  href="{{ URL::asset('images/fav_icon.png') }}" type="image/png" />
 
 	<title>@if(isset($title)){{$title}}@endif</title>
-   {!! HTML::script('script/jquery.js') !!}
-   {!! HTML::script('script/jqueryui.js') !!}
-   {!! HTML::script('script/bootstrap.min.js') !!}
-   {!! HTML::style('css/bootstrap.min.css') !!}
-   {!! HTML::style('css/jqueryui.css') !!}
-   {!! HTML::script('script/bootstrapValidator.min.js') !!}
-   {!! HTML::style('css/bootstrapValidator.min.css') !!}
-   {!! HTML::style('css/font-awesome/css/font-awesome.min.css') !!}
-   
-   {!! HTML::style('css/themes/'.config('site.theme_slug')) !!}
-   {!! HTML::script('script/page_wise/paginga.jquery.js') !!}
-   {{HTML::script('script/page_wise/page_wise_questions.js')}}
+    <script src="{{ asset('script/jquery.js') }}"></script>
+    <script src="{{ asset('script/jqueryui.js') }}"></script>
+    <script src="{{ asset('script/bootstrap.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jqueryui.css') }}">
+    <script src="{{ asset('script/bootstrapValidator.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/bootstrapValidator.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('css/themes/' . config('site.theme_slug')) }}">
+    <script src="{{ asset('script/page_wise/paginga.jquery.js') }}"></script>
+    <script src="{{ asset('script/page_wise/page_wise_questions.js') }}"></script>
+
 </head>
 <body>
 
@@ -34,15 +35,15 @@
 
 <script type="text/javascript">
    $(document).ready(function(){
-      var window_height=$(window).height(); 
+      var window_height=$(window).height();
       var position = $('.page-wrapper').position();
       var current_position=Math.ceil(position.top);
       var variable_height=Math.ceil(window_height-current_position-50);
       if(variable_height > 0 ) $('.page-wrapper').css('min-height',variable_height+"px");
-      
+
    })
 </script>
 
 </body>
-</html> 
+</html>
 

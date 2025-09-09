@@ -19,48 +19,54 @@
           <strong>Error!</strong> A problem has been occurred while submitting form.<br>
           <ul> {!! implode('', $errors->all('<li class="text-danger">:message</li>')) !!}</ul>
       </div>
-     @endif 
+     @endif
      <?php $participant_id = $participant_details->id;?>
+     <form method="POST" action="{{ route('manage-respondent.store', config('site.survey_slug')) }}" id="add-participants" class="form-horizontal">
+        @csrf
+        <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+        <input type="hidden" name="participant_id" value="{{ $participant_id }}">
 
-    {!! Form::open(array('route'=>['manage-respondent.store',config('site.survey_slug')],'method'=>'POST','id'=>'add-participants','class'=>'form-horizontal')) !!}
+        <div class="form-group col-sm-12">
+            <label for="fname" class="col-sm-5 col-md-5">First Name</label>
+            <div class="col-sm-12">
+                <input type="text" name="fname" class="form-control" placeholder="First Name">
+            </div>
+        </div>
 
-    {{Form::hidden('survey_id',$survey_id)}}
-    {{Form::hidden('participant_id',$participant_id)}}
+        <div class="form-group col-sm-12">
+            <label for="lname" class="col-sm-5 col-md-5">Last Name</label>
+            <div class="col-sm-12">
+                <input type="text" name="lname" class="form-control" placeholder="Last Name">
+            </div>
+        </div>
 
-      <div class="form-group col-sm-12">
-        {{Form::label('title','First Name',['class'=>'col-sm-5 col-md-5'])}} 
-        <div class="col-sm-12">
-        {{Form::text('fname',null,['class'=>'form-control','placeholder'=>'First Name'])}}
+        <div class="form-group col-sm-12">
+            <label for="email" class="col-sm-5 col-md-5">Email</label>
+            <div class="col-sm-12">
+                <input type="email" name="email" class="form-control" placeholder="Email" id="email">
+            </div>
         </div>
-      </div>
-      <div class="form-group col-sm-12">
-        {{Form::label('title','Last Name',['class'=>'col-sm-5 col-md-5'])}} 
-        <div class="col-sm-12">
-        {{Form::text('lname',null,['class'=>'form-control','placeholder'=>'Last Name'])}}
-        </div>
-      </div>
-      <div class="form-group col-sm-12">
-        {{Form::label('title','Email',['class'=>'col-sm-5 col-md-5'])}} 
-        <div class="col-sm-12">
-        {{Form::email('email',null,['class'=>'form-control','placeholder'=>'Email','id'=>'email'])}}
-        </div>
-      </div>
-    	<div class="form-group col-sm-12">
-        {{Form::label('title','Rater / Respondent',['class'=>'col-sm-7 col-md-5'])}} 
-        <div class="col-sm-12">
-        {{Form::select('rater',$survey_rater_list,null,['class'=>'form-control'])}}
-        </div>
-      </div>
- 
-      <div class="form-group" align="center" >
-        <a href="{{ route('manage-respondent.index',config('site.survey_slug')) }}" class="btn btn-danger">Cancel</a>
-        <button type="submit" class="btn btn-submit">Save</button>
-       </div>
 
-      {!! Form::close() !!}
+        <div class="form-group col-sm-12">
+            <label for="rater" class="col-sm-7 col-md-5">Rater / Respondent</label>
+            <div class="col-sm-12">
+                <select name="rater" class="form-control">
+                    @foreach($survey_rater_list as $key => $value)
+                        <option value="{{ $key }}">{{ $value }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group" align="center">
+            <a href="{{ route('manage-respondent.index', config('site.survey_slug')) }}" class="btn btn-danger">Cancel</a>
+            <button type="submit" class="btn btn-submit">Save</button>
+        </div>
+    </form>
+
   </div>
-    
-    
+
+
 
  <div id="add-import" class="tab-pane fade">
      @if(Session::get('msg'))
@@ -84,7 +90,7 @@
       <div class="instructions">
         <div class="group-text-info pull-left col-sm-6">
         <p class="text-info">Upload .xls .xlsx file with following headers to update the participant list. <b>(r_fname,r_lname,r_email,r_type)</b></p>
-        
+
         </div>
         <div class="raters pull-right col-sm-6">
           <table class="table table-bordered text-center">
@@ -105,7 +111,8 @@
         <p class="text-info col-sm-12" >Download sample users <a href="{{URL::route('manage-respondent.show',[config('site.survey_slug'),0,'action=download-sample-respondent-import'])}}" class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Download</a></p>
       </div>
       <div class="col-sm-12" style="clear: both;">
-      {{Form::hidden('survey_id',$survey_id)}}
+        <input type="hidden" name="survey_id" value="{{ $survey_id }}">
+
             <input type="file" class="form-control filestyle" data-buttonName="btn-primary" placeholder="File type:xls,xlsx" name="import_file" id="upload" accept=".xls, .xlsx"/>
       </div>
       <br>
@@ -114,20 +121,21 @@
      <a href="{{ route('manage-respondent.index',config('site.survey_slug')) }}" class="btn btn-danger">Cancel</a>
         <button type="submit" class="btn btn-submit">Save</button>
     </div>
-    
-       
+
+
     </form>
     </div>
 
 
   </div>
-    
 
-  
+
+
  </div>
 </div>
 </div>
-{!! HTML::script('script/bootstrap-filestyle.js')!!}
+<script src="{{ asset('script/bootstrap-filestyle.js') }}"></script>
+
 <style media="screen">
 .help-block{
   color: #C9302C;
@@ -186,8 +194,9 @@ footer{
   var participant_email = "<?php echo $participant_details->email; ?>";
   var routeurl="{!!URL::route('manage-respondent.show',[config('site.survey_slug'),'validate-user-respondent'])!!}";
 </script>
-{!! HTML::script('script/add_respondent.js') !!}
-{{ HTML::script('script/sweetalert.min.js') }}
-{{ HTML::style('css/sweetalert.css') }}
+<script src="{{ asset('script/add_respondent.js') }}"></script>
+<script src="{{ asset('script/sweetalert.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/sweetalert.css') }}">
+
 @endsection
 

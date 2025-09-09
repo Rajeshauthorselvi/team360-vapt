@@ -7,7 +7,8 @@
     {!! $welcome_text !!}
     </div>
     <div class="welcome-footer text-center">
-      {{Form::button('Take Survey',['class'=>'btn btn-submit ','id'=>'take-survey'])}}
+        <button type="button" class="btn btn-submit" id="take-survey">Take Survey</button>
+
     </div>
   </div>
 </div>

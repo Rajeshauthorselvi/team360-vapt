@@ -5,14 +5,16 @@
 
 <div class="container parent">
 <div class="row">
-{{HTML::script('script/question-survey-common.js')}}
+    <script src="{{ asset('script/question-survey-common.js') }}"></script>
+
 @include('Page_Wise.users.questions.functions')
 
 @include('Page_Wise.users.questions.welcome')
 
 <div class="col-sm-12  col-md-8 col-md-offset-2 col-xs-12 welcome-txt" id="question-container">
 
-  {!! Form::open(array('route'=>['ostore',config('site.survey_slug')],'method'=>'POST','id'=>'survey-user-form')) !!}
+    <form method="POST" action="{{ route('ostore', config('site.survey_slug')) }}" id="survey-user-form">
+        @csrf
 
 
   <?php $no=1;?>
@@ -41,14 +43,15 @@
         <div class="title m-b-md">
           <div class="text-center">NO QUESTIONS FOUND</div>
         </div>
-        
+
       @endif
       </ul>
   </div>
 
-  {{Form::hidden('currentli',1,['id'=>'currentli'])}}
-  {{Form::hidden('formaction','submit',['id'=>'formaction'])}}
-  {{Form::close()}}
+  <input type="hidden" name="currentli" value="1" id="currentli">
+  <input type="hidden" name="formaction" value="submit" id="formaction">
+  </form>
+
 
 </div>
 
@@ -108,7 +111,7 @@ else
   $(this).find('.message').hide();
   }
 }
-  }); 
+  });
 
 
  if(liposition.length > 0)
